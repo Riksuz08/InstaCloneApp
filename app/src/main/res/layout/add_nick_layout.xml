@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <EditText
+        android:id="@+id/dialogtxtNick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="riksuz"
+        android:layout_marginHorizontal="90dp"
+        android:textAlignment="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dialogtxtNick"
+        android:layout_centerInParent="true"
+        android:paddingHorizontal="20dp">
+
+        <Button
+            android:id="@+id/dialogSaveBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+
+            android:text="Сохранить"
+            android:textSize="10dp" />
+
+        <Button
+            android:id="@+id/dialogCancelBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="30dp"
+            android:text="Отменить"
+            android:textSize="10dp" />
+
+    </LinearLayout>
+</RelativeLayout>

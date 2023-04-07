@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddComment">
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/live"
+        >
+        <TextView
+            android:id="@+id/addNickTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Редактировать комментарий"
+            android:textSize="18dp"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"/>
+        <ImageView
+            android:id="@+id/backBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/baseline_arrow_back_24"
+            android:layout_centerVertical="true"
+            android:paddingLeft="20dp"/>
+
+    </RelativeLayout>
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+android:layout_below="@id/topBar"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+
+    <RelativeLayout
+        android:id="@+id/addNickLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/topBar">
+
+        <TextView
+            android:id="@+id/addNik"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="12dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+
+            android:layout_marginEnd="52dp"
+            android:layout_toStartOf="@+id/addNickButton"
+            android:text="Добавить/Удалить никнейм"
+            android:textSize="15dp" />
+
+        <Button
+            android:id="@+id/addNickButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/deleteNickButton"
+            android:backgroundTint="@color/live"
+            android:maxLines="1"
+            android:layout_centerVertical="true"
+            android:text="Добавить"
+            android:textSize="8dp" />
+
+        <Button
+            android:id="@+id/deleteNickButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="21dp"
+            android:layout_centerVertical="true"
+            android:backgroundTint="@color/live"
+            android:maxLines="1"
+            android:text="Удалить"
+            android:textSize="8dp" />
+
+
+    </RelativeLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:padding="5dp"
+        android:id="@+id/nickScroll"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginHorizontal="5dp"
+        android:background="@drawable/sawradius"
+        android:layout_below="@+id/addNickLayout"
+        >
+
+        <TextView android:id="@+id/nickTxt"
+            android:hint="1.Jony"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:text=""
+            />
+
+
+
+    </androidx.core.widget.NestedScrollView>
+        <RelativeLayout
+            android:id="@+id/addCommentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/nickScroll">
+
+            <TextView
+                android:id="@+id/addCommentTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="12dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+
+                android:layout_marginEnd="52dp"
+                android:layout_toStartOf="@+id/addCommentButton"
+                android:text="Добавить/Удалить сообщение"
+                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/addCommentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@+id/deleteCommentButton"
+                android:backgroundTint="@color/live"
+                android:maxLines="1"
+                android:layout_centerVertical="true"
+                android:text="Добавить"
+                android:textSize="8dp" />
+
+            <Button
+                android:id="@+id/deleteCommentButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="21dp"
+                android:layout_centerVertical="true"
+                android:backgroundTint="@color/live"
+                android:maxLines="1"
+                android:text="Удалить"
+                android:textSize="8dp" />
+
+
+        </RelativeLayout>
+        <androidx.core.widget.NestedScrollView
+            android:padding="5dp"
+            android:id="@+id/commentScroll"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginHorizontal="5dp"
+            android:background="@drawable/sawradius"
+
+            android:layout_below="@+id/addCommentLayout"
+            >
+
+            <TextView
+                android:hint="1.Hello"
+                android:id="@+id/commentTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:text=""
+                />
+
+
+
+        </androidx.core.widget.NestedScrollView>
+        <RelativeLayout
+            android:id="@+id/addAvatarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/commentScroll">
+
+            <TextView
+                android:id="@+id/addAvatarTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="12dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginEnd="52dp"
+                android:layout_toStartOf="@+id/addAvatarButton"
+                android:text="Добавить/Удалить аватарку"
+                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/addAvatarButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@+id/deleteAvatarButton"
+                android:backgroundTint="@color/live"
+                android:maxLines="1"
+                android:layout_centerVertical="true"
+                android:text="Добавить"
+                android:textSize="8dp" />
+
+            <Button
+                android:id="@+id/deleteAvatarButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="21dp"
+                android:layout_centerVertical="true"
+                android:backgroundTint="@color/live"
+                android:maxLines="1"
+                android:text="Удалить"
+                android:textSize="8dp" />
+
+
+        </RelativeLayout>
+        <androidx.core.widget.NestedScrollView
+            android:padding="10dp"
+            android:id="@+id/avatarScroll"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginHorizontal="5dp"
+            android:background="@drawable/sawradius"
+
+            android:layout_below="@+id/addCommentLayout"
+            >
+        <GridLayout
+
+            android:id="@+id/gridLayout"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:columnCount="3"
+            android:rowCount="3"
+            android:orientation="horizontal"
+            android:alignmentMode="alignBounds"
+            android:useDefaultMargins="true"
+            android:padding="10dp"
+            app:layout_constraintTop_toBottomOf="@id/addAvatarLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.core.widget.NestedScrollView>
+        <RelativeLayout
+            android:id="@+id/uniqueLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/avatarScroll">
+
+            <TextView
+                android:id="@+id/uniqueAvatarTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="12dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+
+                android:layout_marginEnd="52dp"
+                android:layout_toStartOf="@+id/adduniqueAvatarButton"
+                android:text="Добавить/Удалить уникальный комментарий"
+                android:textSize="15dp" />
+
+            <Switch
+                android:id="@+id/switchUniqueComments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="-45dp"
+                android:layout_toEndOf="@+id/uniqueAvatarTxt"
+                android:checked="false">
+
+            </Switch>
+
+            <Button
+                android:id="@+id/adduniqueAvatarButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@+id/deleteUniqueAvatarButton"
+                android:backgroundTint="@color/live"
+                android:maxLines="1"
+                android:layout_centerVertical="true"
+                android:text="Добавить"
+                android:textSize="8dp" />
+
+            <Button
+                android:id="@+id/deleteUniqueAvatarButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="21dp"
+                android:layout_centerVertical="true"
+                android:backgroundTint="@color/live"
+                android:maxLines="1"
+                android:text="Удалить"
+                android:textSize="8dp" />
+
+
+        </RelativeLayout>
+        <androidx.core.widget.NestedScrollView
+            android:padding="10dp"
+            android:id="@+id/UniqueCommentScroll"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginHorizontal="5dp"
+            android:background="@drawable/sawradius"
+            android:layout_marginBottom="80dp"
+            android:layout_below="@+id/addCommentLayout"
+            >
+<LinearLayout
+    android:id="@+id/commentLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"/>
+
+
+
+
+
+        </androidx.core.widget.NestedScrollView>
+
+
+
+    </LinearLayout>
+
+
+</androidx.core.widget.NestedScrollView>
+</RelativeLayout>

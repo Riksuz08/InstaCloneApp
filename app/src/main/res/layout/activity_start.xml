@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".start_activity">
+
+
+
+    <ImageView
+        android:id="@+id/settings"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/baseline_settings_24"
+        android:layout_alignTop="@+id/instaLive"
+        android:layout_alignBottom="@+id/instaLive"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="7dp" />
+
+    <TextView
+        android:id="@+id/instaLive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Instagram Live"
+        android:textSize="30dp"
+        android:maxLines="1"
+
+        android:textColor="@color/live"/>
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/avatarstart"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        app:shapeAppearanceOverlay="@style/circular"
+        app:strokeWidth="5dp"
+        android:padding="5dp"
+        app:strokeColor="@color/live"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/no_user">
+
+    </com.google.android.material.imageview.ShapeableImageView>
+
+    <Button
+        android:id="@+id/startlivebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/saveusername"
+        android:layout_centerHorizontal="true"
+       android:layout_marginTop="15dp"
+        android:backgroundTint="@color/live"
+        android:text="Прямой эфир"
+        android:textColor="@color/white" />
+
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/avatarstart"
+        android:ellipsize="start"
+        android:maxLines="1"
+        android:layout_marginTop="20dp"
+        android:hint="Никнейм"
+        android:textAlignment="center"
+        android:layout_centerHorizontal="true"
+        android:textColorHint="@color/grey"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="27dp"
+        android:singleLine="true"
+        tools:ignore="EllipsizeMaxLines" />
+
+    <Button
+        android:id="@+id/saveusername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/username"
+
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="@color/live"
+        android:text="Сохранить"
+        android:textColor="@color/white"
+        android:textSize="13dp" />
+
+</RelativeLayout>

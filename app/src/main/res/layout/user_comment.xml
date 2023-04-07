@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:duplicateParentState="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/name_user"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/avatar"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_toEndOf="@+id/avatar"
+                        android:text="nikita_0504"
+                        android:textColor="@color/black"
+                        android:textFontWeight="1000"
+                        android:textSize="11dp" />
+
+                    <ImageView
+                        android:id="@+id/avatar"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+
+                        android:src="@drawable/img" />
+
+                    <TextView
+                        android:id="@+id/msg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/name_user"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@+id/avatar"
+                        android:text="Привет"
+                        android:textColor="@color/black"
+                        android:textFontWeight="1000"
+                        android:textSize="11dp" />
+
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/name_user1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/avatar1"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_toEndOf="@+id/avatar1"
+                        android:text="ilhom_0291"
+                        android:textColor="@color/black"
+                        android:textFontWeight="1000"
+                        android:textSize="11dp" />
+
+                    <ImageView
+                        android:id="@+id/avatar1"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_launcher_background" />
+
+                    <TextView
+                        android:id="@+id/msg1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/name_user1"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@+id/avatar1"
+                        android:text="Успехов тебе"
+                        android:textColor="@color/black"
+                        android:textFontWeight="1000"
+                        android:textSize="11dp" />
+
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:alpha="0.5"
+                app:cardBackgroundColor="@color/grey_dark"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/name_user2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/avatar2"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_toEndOf="@+id/avatar2"
+                        android:text="amin_02"
+                        android:textColor="@color/white"
+                        android:textFontWeight="1000"
+                        android:textSize="11dp" />
+
+                    <ImageView
+                        android:id="@+id/avatar2"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_launcher_background" />
+
+                    <TextView
+                        android:id="@+id/msg2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/name_user2"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@+id/avatar2"
+                        android:text="Контент крутой"
+                        android:textColor="@color/black"
+                        android:textFontWeight="1000"
+                        android:textSize="11dp" />
+
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/name_user3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/avatar3"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="0dp"
+                        android:layout_toEndOf="@+id/avatar3"
+                        android:text="kapibara_new"
+                        android:textColor="@color/black"
+                        android:textFontWeight="1000"
+                        android:textSize="11dp" />
+
+                    <ImageView
+                        android:id="@+id/avatar3"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_launcher_background" />
+
+                    <TextView
+                        android:id="@+id/msg3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/name_user3"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@+id/avatar3"
+                        android:text="Ильхом коп"
+                        android:textColor="@color/black"
+                        android:textFontWeight="1000"
+                        android:textSize="11dp" />
+
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
