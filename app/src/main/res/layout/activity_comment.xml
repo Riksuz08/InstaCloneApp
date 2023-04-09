@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -42,33 +43,36 @@
 
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="192dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
 
             android:orientation="vertical">
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-            <TextView
-                android:id="@+id/nickTextView"
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:orientation="horizontal">
 
-                android:textSize="11dp"
-                android:textStyle="bold" />
-    <ImageView
-        android:id="@+id/verification"
-        android:layout_width="15dp"
-        android:alpha="0"
-        android:layout_height="15dp"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/nicknameText"
-        android:layout_marginStart="5dp"
-        android:src="@drawable/insta_verification" />
-</LinearLayout>
+                <TextView
+                    android:id="@+id/nickTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+
+                    android:textSize="11dp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/verification"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@+id/nicknameText"
+                    android:alpha="0"
+                    android:src="@drawable/insta_verification" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/commentTextView"
@@ -79,7 +83,30 @@
                 android:textSize="11dp" />
 
         </LinearLayout>
+<RelativeLayout
+    android:id="@+id/hiLay"
+    android:layout_marginStart="15dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_button"
+    android:alpha="0"
+    >
 
+    <TextView
+        android:id="@+id/hiBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_centerInParent="true"
+        android:alpha="0"
+        android:paddingHorizontal="10dp"
+        android:paddingTop="3dp"
+        android:text="👋 Помахать"
+        android:textColor="@color/white"
+        android:textSize="14dp" />
+
+
+
+</RelativeLayout>
     </LinearLayout>
 
     <ScrollView

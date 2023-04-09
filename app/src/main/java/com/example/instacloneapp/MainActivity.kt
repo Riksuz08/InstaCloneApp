@@ -11,25 +11,22 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Bundle
-import android.os.Environment
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
-import androidx.camera.core.processing.SurfaceProcessorNode.In
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.example.instacloneapp.databinding.ActivityMainBinding
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
@@ -305,6 +302,11 @@ class MainActivity : AppCompatActivity() {
             avatarCenter.setImageBitmap(bitmap)
         }
 
+
+
+
+
+
         ///////////////////
         commentsLayout = findViewById(R.id.commentsLayout)
         commentContainer=findViewById(R.id.commentContainer)
@@ -320,6 +322,7 @@ class MainActivity : AppCompatActivity() {
         val handlerJoined = Handler(Looper.getMainLooper());
 
         handlerJoined.postDelayed(object : Runnable {
+            @SuppressLint("NewApi")
             override fun run() {
                 addRandomCommentJoined()
                 handler.postDelayed(this, (oneMsgTime*10000).toLong()) // repeat every 10 seconds
@@ -385,10 +388,25 @@ class MainActivity : AppCompatActivity() {
 
         var msgRus= arrayOf("Привет "+savedEditTextValue,"Ого, какая красота!", "Мне нравится ваше шоу!", "Как же я соскучился по вашим эфирам!", "Вы сегодня выглядите потрясающе!", "Смотрю вас уже несколько лет и не могу налюбоваться!", "Очень интересный контент, продолжайте в том же духе!", "Какой у вас микрофон? Очень четкий звук!", "Все ваши гости такие умные и образованные!", "Это лучшее, что я видел на протяжении всего дня!", "Я ждал этот эфир целый день!", "Вы меня очень вдохновляете!", "Так интересно слушать вас!", "Какая у вас камера? Качество картинки на высоте!", "Мне очень нравится ваше чувство юмора!", "Вы всегда поднимаете мне настроение!", "Ваш контент стал для меня настоящей находкой!", "Как вы успеваете делать все эти проекты?", "Продолжайте радовать нас своими эфирами!", "Ваше мнение для меня очень важно!", "С нетерпением жду вашего следующего эфира!", "Я смотрю вас каждый день и не могу остановиться!", "Какой у вас талант, так много знаний и умений!", "Очень хороший выбор музыки в фоне!", "Вы выглядите очень естественно и раскованно на камеру!", "Продолжайте так же, вы просто молодцы!", "Мне очень нравится, как вы подаете информацию!", "Ваши эфиры помогают мне забыть обо всем на свете!", "Как же я люблю ваши стримы!", "Вы такой мастер своего дела!", "Смотрю вас уже с первого эфира и не могу надышаться!")
         val avatarsRus = ArrayList<Drawable>()
-        avatarsRus.add(resources.getDrawable(R.drawable.eyes))
-        avatarsRus.add(resources.getDrawable(R.drawable.micro))
-        avatarsRus.add(resources.getDrawable(R.drawable.vid))
-        avatarsRus.add(resources.getDrawable(R.drawable.nomicro))
+        avatarsRus.add(resources.getDrawable(R.drawable.e1))
+        avatarsRus.add(resources.getDrawable(R.drawable.e2))
+        avatarsRus.add(resources.getDrawable(R.drawable.e13))
+        avatarsRus.add(resources.getDrawable(R.drawable.e4))
+        avatarsRus.add(resources.getDrawable(R.drawable.e5))
+        avatarsRus.add(resources.getDrawable(R.drawable.e6))
+        avatarsRus.add(resources.getDrawable(R.drawable.e7))
+        avatarsRus.add(resources.getDrawable(R.drawable.e8))
+        avatarsRus.add(resources.getDrawable(R.drawable.e9))
+        avatarsRus.add(resources.getDrawable(R.drawable.e10))
+        avatarsRus.add(resources.getDrawable(R.drawable.e11))
+        avatarsRus.add(resources.getDrawable(R.drawable.e12))
+        avatarsRus.add(resources.getDrawable(R.drawable.e14))
+        avatarsRus.add(resources.getDrawable(R.drawable.e15))
+        avatarsRus.add(resources.getDrawable(R.drawable.e16))
+        avatarsRus.add(resources.getDrawable(R.drawable.e24))
+        avatarsRus.add(resources.getDrawable(R.drawable.e20))
+        avatarsRus.add(resources.getDrawable(R.drawable.e21))
+
 
         if(savedEditTextValueLang==""){
             nikRus=nikRus+list.toTypedArray()
@@ -779,14 +797,38 @@ if(savedEditTextValueLang==""){
         }, 100)
 
     }
+    @RequiresApi(Build.VERSION_CODES.Q)
+    @SuppressLint("MissingInflatedId")
     private fun addRandomCommentJoined() {
         val randomIndex = random.nextInt(commentsList.size)
         val comment = commentsList[randomIndex]
+        val sharedPrefLang = getSharedPreferences("lang", Context.MODE_PRIVATE)
+        val savedEditTextValueLang = sharedPrefLang.getString("edit_text_value", "")
+
 
         val commentView = layoutInflater.inflate(R.layout.activity_comment, null)
         commentView.findViewById<TextView>(R.id.nickTextView).text = comment.nickname
-        commentView.findViewById<TextView>(R.id.commentTextView).text = "Присоединился(-ась)"
+        if(savedEditTextValueLang==""){
+        commentView.findViewById<TextView>(R.id.commentTextView).text = "Присоединился(-ась)"}
+        else{
+            if(savedEditTextValueLang=="РУ"){
+                commentView.findViewById<TextView>(R.id.commentTextView).text = "Присоединился(-ась)"
+            }else{
+                commentView.findViewById<TextView>(R.id.nickTextView).text=comment.nickname+" joined"
+            }
+        }
         commentView.findViewById<ImageView>(R.id.avatarImageView).setImageDrawable(comment.avatar)
+        if(savedEditTextValueLang=="") {
+            commentView.findViewById<TextView>(R.id.hiBtn)
+        }else{
+            if(savedEditTextValueLang=="РУ"){
+                commentView.findViewById<TextView>(R.id.hiBtn).setText("\uD83D\uDC4B Помахать")
+            }else{
+                commentView.findViewById<TextView>(R.id.hiBtn).setText("\uD83D\uDC4B Wave")
+            }
+        }
+        commentView.findViewById<RelativeLayout>(R.id.hiLay).alpha=0.5f
+        commentView.findViewById<TextView>(R.id.hiBtn).alpha=1f
 
 
 
