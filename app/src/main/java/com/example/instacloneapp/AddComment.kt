@@ -20,6 +20,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.nfc.Tag
 import android.os.Environment
+import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
@@ -32,6 +33,7 @@ import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.*
 import org.json.JSONArray
 import java.io.*
 import java.util.*
@@ -48,31 +50,43 @@ class AddComment : AppCompatActivity() {
     lateinit var UniqueAvatarImage: ImageView
     lateinit var backBtn: ImageView
     lateinit var addNickButton: Button;
-    lateinit var NickTextView:MaterialTextView;
-    lateinit var deleteNickButton:Button
-    lateinit var nickField:EditText;
-    lateinit var commentField:EditText;
-    lateinit var idUnique:TextView
+    lateinit var NickTextView: MaterialTextView;
+    lateinit var deleteNickButton: Button
+    lateinit var nickField: EditText;
+    lateinit var commentField: EditText;
+    lateinit var idUnique: TextView
     lateinit var addCommentButton: Button
-    lateinit var deleteCommentButton:Button
-    lateinit var CommentTextView:MaterialTextView
-    lateinit var deleteAvatarButton:Button
-    lateinit var addAvatarButton:Button
-    lateinit var gridLayout:GridLayout;
-   lateinit var addUniqueCommentButton: Button
+    lateinit var deleteCommentButton: Button
+    lateinit var CommentTextView: MaterialTextView
+    lateinit var deleteAvatarButton: Button
+    lateinit var addAvatarButton: Button
+    lateinit var gridLayout: GridLayout;
+    lateinit var addUniqueCommentButton: Button
     lateinit var deleteUniqueCommentButton: Button
-    lateinit var adnik:TextView
-    lateinit var adcom:TextView
-    lateinit var adava:TextView
-    lateinit var uncom:TextView
-    var hasnoUserIcon: Boolean=true
-    var isCheckedVerif:Boolean=false
-   lateinit var drw:Drawable;
+    lateinit var adnik: TextView
+    lateinit var adcom: TextView
+    lateinit var adava: TextView
+    lateinit var uncom: TextView
+    var hasnoUserIcon: Boolean = true
+    var isCheckedVerif: Boolean = false
+    lateinit var drw: Drawable;
     private val REQUEST_CODE_PICK_IMAGE = 201
     private val PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 202
-    lateinit var switchUniqueComment:Switch
+    lateinit var switchUniqueComment: Switch
     var widthImage by Delegates.notNull<Float>()
-    val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path + "/InstagramLive")
+    var list = mutableListOf<String>()
+    var listComment = mutableListOf<String>()
+
+
+    var listUniqueComment = mutableListOf<String>()
+    var listUniqueNick = mutableListOf<String>()
+    val bitmapArray = ArrayList<Bitmap>()
+    var boolList = mutableListOf<Boolean>()
+    lateinit var scrollView: NestedScrollView
+    lateinit var commentLayout: LinearLayout
+    val dir =
+        File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path + "/InstagramLive")
+
     @SuppressLint("MissingInflatedId", "SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,96 +95,91 @@ class AddComment : AppCompatActivity() {
         backBtn = findViewById(R.id.backBtn)
         NickTextView = findViewById(R.id.nickTxt)
         deleteNickButton = findViewById(R.id.deleteNickButton)
-        addCommentButton=findViewById(R.id.addCommentButton)
-        deleteCommentButton=findViewById(R.id.deleteCommentButton)
-        CommentTextView=findViewById(R.id.commentTxt)
+        addCommentButton = findViewById(R.id.addCommentButton)
+        deleteCommentButton = findViewById(R.id.deleteCommentButton)
+        CommentTextView = findViewById(R.id.commentTxt)
         addAvatarButton = findViewById(R.id.addAvatarButton)
-        gridLayout=findViewById(R.id.gridLayout)
-        deleteAvatarButton=findViewById(R.id.deleteAvatarButton)
-        addUniqueCommentButton=findViewById(R.id.adduniqueAvatarButton)
-        deleteUniqueCommentButton=findViewById(R.id.deleteUniqueAvatarButton)
-        switchUniqueComment= findViewById(R.id.switchUniqueComments)
-        val scrollView = findViewById<NestedScrollView>(R.id.UniqueCommentScroll)
-        val commentLayout = findViewById<LinearLayout>(R.id.commentLayout)
-        var switchBool:Boolean
-        var addniktxt=findViewById<TextView>(R.id.addNickTxt)
+        gridLayout = findViewById(R.id.gridLayout)
+        deleteAvatarButton = findViewById(R.id.deleteAvatarButton)
+        addUniqueCommentButton = findViewById(R.id.adduniqueAvatarButton)
+        deleteUniqueCommentButton = findViewById(R.id.deleteUniqueAvatarButton)
+        switchUniqueComment = findViewById(R.id.switchUniqueComments)
+        scrollView = findViewById(R.id.UniqueCommentScroll)
+        commentLayout = findViewById(R.id.commentLayout)
+        var switchBool: Boolean
+        var addniktxt = findViewById<TextView>(R.id.addNickTxt)
 
-        adcom=findViewById(R.id.addCommentTxt)
-        adnik=findViewById(R.id.addNik)
-        adava=findViewById(R.id.addAvatarTxt)
-        uncom=findViewById(R.id.uniqueAvatarTxt)
+        adcom = findViewById(R.id.addCommentTxt)
+        adnik = findViewById(R.id.addNik)
+        adava = findViewById(R.id.addAvatarTxt)
+        uncom = findViewById(R.id.uniqueAvatarTxt)
 
         val sharedPrefLang = getSharedPreferences("lang", Context.MODE_PRIVATE)
         val savedEditTextValueLang = sharedPrefLang.getString("edit_text_value", "")
 
 
-        if(savedEditTextValueLang==""){
-            adnik.text="Добавить/Удалить никнейм"
-            adcom.text="Добавить/Удалить сообщение"
-            adava.text="Добавить/Удалить аватарку"
-            uncom.text="Добавить/Удалить уникальный комментарий"
-            addniktxt.text="Добавить комментарий"
-            addNickButton.text="Добавить"
-            deleteNickButton.text="Удалить"
-            addCommentButton.text="Добавить"
-            deleteCommentButton.text="Удалить"
-            addAvatarButton.text="Добавить"
-            deleteAvatarButton.text="Удалить"
-            addUniqueCommentButton.text="Добавить"
-            deleteUniqueCommentButton.text="Удалить"
+        if (savedEditTextValueLang == "") {
+            adnik.text = "Добавить/Удалить никнейм"
+            adcom.text = "Добавить/Удалить сообщение"
+            adava.text = "Добавить/Удалить аватарку"
+            uncom.text = "Добавить/Удалить уникальный комментарий"
+            addniktxt.text = "Дополнительные опции"
+            addNickButton.text = "Добавить"
+            deleteNickButton.text = "Удалить"
+            addCommentButton.text = "Добавить"
+            deleteCommentButton.text = "Удалить"
+            addAvatarButton.text = "Добавить"
+            deleteAvatarButton.text = "Удалить"
+            addUniqueCommentButton.text = "Добавить"
+            deleteUniqueCommentButton.text = "Удалить"
             val dialog = Dialog(this)
             dialog.setContentView(R.layout.add_nick_layout)
-            dialog.findViewById<Button>(R.id.dialogSaveBtn).text="Сохранить"
-            dialog.findViewById<Button>(R.id.dialogCancelBtn).text="Отменить"
-        }else {
+            dialog.findViewById<Button>(R.id.dialogSaveBtn).text = "Сохранить"
+            dialog.findViewById<Button>(R.id.dialogCancelBtn).text = "Отменить"
+        } else {
             if (savedEditTextValueLang == "РУ") {
-                adnik.text="Добавить/Удалить никнейм"
-                adcom.text="Добавить/Удалить сообщение"
-                adava.text="Добавить/Удалить аватарку"
-                uncom.text="Добавить/Удалить уникальный комментарий"
-                addniktxt.text="Добавить комментарий"
-                addNickButton.text="Добавить"
-                deleteNickButton.text="Удалить"
-                addCommentButton.text="Добавить"
-                deleteCommentButton.text="Удалить"
-                addAvatarButton.text="Добавить"
-                deleteAvatarButton.text="Удалить"
-                addUniqueCommentButton.text="Добавить"
-                deleteUniqueCommentButton.text="Удалить"
+                adnik.text = "Добавить/Удалить никнейм"
+                adcom.text = "Добавить/Удалить сообщение"
+                adava.text = "Добавить/Удалить аватарку"
+                uncom.text = "Добавить/Удалить уникальный комментарий"
+                addniktxt.text = "Дополнительные опции"
+                addNickButton.text = "Добавить"
+                deleteNickButton.text = "Удалить"
+                addCommentButton.text = "Добавить"
+                deleteCommentButton.text = "Удалить"
+                addAvatarButton.text = "Добавить"
+                deleteAvatarButton.text = "Удалить"
+                addUniqueCommentButton.text = "Добавить"
+                deleteUniqueCommentButton.text = "Удалить"
                 val dialog = Dialog(this)
                 dialog.setContentView(R.layout.add_nick_layout)
-                dialog.findViewById<Button>(R.id.dialogSaveBtn).text="Сохранить"
-                dialog.findViewById<Button>(R.id.dialogCancelBtn).text="Отменить"
+                dialog.findViewById<Button>(R.id.dialogSaveBtn).text = "Сохранить"
+                dialog.findViewById<Button>(R.id.dialogCancelBtn).text = "Отменить"
             } else {
-                adnik.text="Add/Delete nickname"
-                adcom.text="Add/Delete comment"
-                adava.text="Add/Delete avatar"
-                uncom.text="Add/Delete unique comment"
-                addNickButton.text="Add"
-                addniktxt.text="Add comments"
-                deleteNickButton.text="Delete"
-                addCommentButton.text="Add"
-                deleteCommentButton.text="Delete"
-                addAvatarButton.text="Add"
-                deleteAvatarButton.text="Delete"
-                addUniqueCommentButton.text="Add"
-                deleteUniqueCommentButton.text="Delete"
+                adnik.text = "Add/Delete nickname"
+                adcom.text = "Add/Delete comment"
+                adava.text = "Add/Delete avatar"
+                uncom.text = "Add/Delete unique comment"
+                addNickButton.text = "Add"
+                addniktxt.text = "More Options"
+                deleteNickButton.text = "Delete"
+                addCommentButton.text = "Add"
+                deleteCommentButton.text = "Delete"
+                addAvatarButton.text = "Add"
+                deleteAvatarButton.text = "Delete"
+                addUniqueCommentButton.text = "Add"
+                deleteUniqueCommentButton.text = "Delete"
                 val dialog = Dialog(this)
                 dialog.setContentView(R.layout.add_nick_layout)
-                dialog.findViewById<Button>(R.id.dialogSaveBtn).text="Save"
-                dialog.findViewById<Button>(R.id.dialogCancelBtn).text="Cancel"
+                dialog.findViewById<Button>(R.id.dialogSaveBtn).text = "Save"
+                dialog.findViewById<Button>(R.id.dialogCancelBtn).text = "Cancel"
             }
         }
 
 
-
-
-
-
-
         val sharedPrefs = getSharedPreferences("Number", Context.MODE_PRIVATE)
         val myNumber = sharedPrefs.getFloat("myNumber", 300F)
-        widthImage=myNumber
+        widthImage = myNumber
 
         // Get the SharedPreferences object
         val sharedPrefsSwitchBool = getSharedPreferences("switchBool", Context.MODE_PRIVATE)
@@ -179,24 +188,20 @@ class AddComment : AppCompatActivity() {
         switchBool = sharedPrefsSwitchBool.getBoolean("myBoolean", false)
 
         switchUniqueComment.isChecked = switchBool
-switchUniqueComment.setOnClickListener{
-    switchBool = switchUniqueComment.isChecked
-    // Get the SharedPreferences object
-    Log.e(TAG,switchBool.toString())
-    val sharedPrefs = getSharedPreferences("switchBool", Context.MODE_PRIVATE)
-    val editor = sharedPrefs.edit()
-    editor.putBoolean("myBoolean", switchBool)
-    editor.apply()
-}
+        switchUniqueComment.setOnClickListener {
+            switchBool = switchUniqueComment.isChecked
+            // Get the SharedPreferences object
+            Log.e(TAG, switchBool.toString())
+            val sharedPrefs = getSharedPreferences("switchBool", Context.MODE_PRIVATE)
+            val editor = sharedPrefs.edit()
+            editor.putBoolean("myBoolean", switchBool)
+            editor.apply()
+        }
 
 
 
 
-        var listUniqueComment= mutableListOf<String>()
-        var listUniqueNick= mutableListOf<String>()
-        val bitmapArray = ArrayList<Bitmap>()
-        var boolList = mutableListOf<Boolean>()
-Log.e(TAG,bitmapArray.toString())
+        Log.e(TAG, bitmapArray.toString())
 
 
         val sharedPrefsB = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
@@ -209,11 +214,14 @@ Log.e(TAG,bitmapArray.toString())
                 if (file.exists()) {
                     val bitmap = BitmapFactory.decodeFile(file.absolutePath)
                     bitmapArrayB.add(bitmap)
+                    Log.e(TAG, bitmapArrayB.toString())
                 }
             }
         }
 
+
         bitmapArray.addAll(bitmapArrayB)
+
 
 // Retrieve the JSON string from SharedPreferences
         val sharedPreferencesUnique = getSharedPreferences("UniqueNick", Context.MODE_PRIVATE)
@@ -221,12 +229,15 @@ Log.e(TAG,bitmapArray.toString())
 
 // Convert the JSON string back to a MutableList using Gson
         val gsonUnique = Gson()
-        if (jsonStringUnique==null) {
-            Log.e(TAG,"okkk")
+        if (jsonStringUnique == null) {
+            Log.e(TAG, "okkk")
         } else {
 
             listUniqueNick =
-                gsonUnique.fromJson(jsonStringUnique, object : TypeToken<MutableList<String>>() {}.type)
+                gsonUnique.fromJson(
+                    jsonStringUnique,
+                    object : TypeToken<MutableList<String>>() {}.type
+                )
 
             Log.e(TAG, listUniqueNick.toString())
 // Display the MutableList in a TextView
@@ -238,12 +249,15 @@ Log.e(TAG,bitmapArray.toString())
 
 // Convert the JSON string back to a MutableList using Gson
         val gsonUniqueCom = Gson()
-        if (jsonStringUniqueCom==null) {
-            Log.e(TAG,"okkk")
+        if (jsonStringUniqueCom == null) {
+            Log.e(TAG, "okkk")
         } else {
 
             listUniqueComment =
-                gsonUniqueCom.fromJson(jsonStringUniqueCom, object : TypeToken<MutableList<String>>() {}.type)
+                gsonUniqueCom.fromJson(
+                    jsonStringUniqueCom,
+                    object : TypeToken<MutableList<String>>() {}.type
+                )
 
             Log.e(TAG, listUniqueComment.toString())
 // Display the MutableList in a TextView
@@ -256,225 +270,15 @@ Log.e(TAG,bitmapArray.toString())
 // Retrieve boolean list from shared preferences
         val jsonBool = sharedPrefsBool.getString("boolListKey", null)
         val gsonBool = Gson()
-        if(jsonBool==null) {
-        }else{
+        if (jsonBool == null) {
+        } else {
             boolList = gsonBool.fromJson(jsonBool, object : TypeToken<List<Boolean>>() {}.type)
         }
 
 
 
 
-        for(i in 0 until bitmapArray.size){
-
-            val newCommentLayout = LayoutInflater.from(this).inflate(R.layout.comment_layout, null)
-            val avatarImage = newCommentLayout.findViewById<ImageView>(R.id.avatarImage)
-            val nicknameText = newCommentLayout.findViewById<TextView>(R.id.nicknameText)
-            val commentText = newCommentLayout.findViewById<TextView>(R.id.commentText)
-            val idUnique=newCommentLayout.findViewById<TextView>(R.id.idUnique)
-            val verification = newCommentLayout.findViewById<ImageView>(R.id.verification)
-            Log.e(TAG,bitmapArray.toString())
-            avatarImage.setImageBitmap(bitmapArray[i])
-            nicknameText.text = listUniqueNick[i]
-            commentText.text = listUniqueComment[i]
-            idUnique.setText((i+1).toString())
-            if(boolList[i]){
-                verification.alpha=1F
-            }else{
-                verification.alpha=0F;
-            }
-            commentLayout.addView(newCommentLayout)
-            scrollView.post {
-                scrollView.fullScroll(View.FOCUS_DOWN)
-            }
-
-
-        }
-
-
-
-
-        val dialogU = Dialog(this)
-        dialogU.setContentView(R.layout.unique_comment)
-        UniqueAvatarImage=dialogU.findViewById<ImageView>(R.id.avatarImage)
-
-
-        Log.e(TAG,listUniqueNick.toString())
-        Log.e(TAG,listUniqueComment.toString())
-        Log.e(TAG,bitmapArray.toString())
-
-addUniqueCommentButton.setOnClickListener{
-
-    val width = resources.displayMetrics.widthPixels *0.99 // adjust this value as needed
-    val height = resources.displayMetrics.heightPixels * 0.4 // adjust this value as needed
-    dialogU.window?.setLayout(width.toInt(), height.toInt())
-
-
-    val saveButton = dialogU.findViewById<Button>(R.id.saveUnique)
-    val cancelButton = dialogU.findViewById<Button>(R.id.cancelUnique)
-    val verifCheck=dialogU.findViewById<CheckBox>(R.id.verificationCheck)
-    nickField=dialogU.findViewById(R.id.nicknameText)
-    commentField=dialogU.findViewById(R.id.commentText)
-    if(savedEditTextValueLang==""){
-        saveButton.text="Сохранить"
-        cancelButton.text="Отменить"
-        nickField.hint="Никнейм"
-        commentField.hint="Коммент"
-
-
-    }else{
-        if(savedEditTextValueLang=="РУ"){
-            saveButton.text="Сохранить"
-            cancelButton.text="Отменить"
-            nickField.hint="Никнейм"
-            commentField.hint="Коммент"
-        }else{
-            saveButton.text="Save"
-            cancelButton.text="Cancel"
-            nickField.hint="Nickname"
-            commentField.hint="Comment"
-        }
-    }
-
-    verifCheck.setOnCheckedChangeListener { buttonView, isChecked ->
-        if (isChecked) {
-            isCheckedVerif=true
-        } else {
-            isCheckedVerif=false
-        }
-    }
-
-
-    commentField.text=null
-    nickField.text=null
-    isCheckedVerif=false
-    verifCheck.isChecked=false
-    UniqueAvatarImage.setImageResource(R.drawable.no_user)
-
-    UniqueAvatarImage.setOnClickListener {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
-            )
-        } else {
-            val intent =
-                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-            startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE)
-        }
-
-
-    }
-
-
-    saveButton.setOnClickListener {
-Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
-        Log.e(TAG, nickField.text.toString().isNotEmpty().toString())
-        Log.e(TAG, (UniqueAvatarImage!=null).toString())
-
-
-        drw=UniqueAvatarImage.drawable
-// Compare the drawable resource to a specific drawable resource using its resource ID
-        hasnoUserIcon =
-            !drw.getConstantState()!!.equals(getResources().getDrawable(R.drawable.no_user).getConstantState())
-        Log.e(TAG,hasnoUserIcon.toString())
-        if (commentField.text.toString().isNotEmpty() && nickField.text.toString().isNotEmpty() && hasnoUserIcon) {
-
-            var comment = commentField.text.toString()
-            var nick = nickField.text.toString()
-            if (comment.isNotEmpty()) {
-                listUniqueComment.add(comment)
-
-
-                val gson = Gson()
-                val jsonString = gson.toJson(listUniqueComment)
-
-// Save the JSON string in SharedPreferences
-                val sharedPreferences = getSharedPreferences("UniqueComment", Context.MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.putString("UniqueComment", jsonString)
-                editor.apply()
-
-
-            }
-            if (nick.isNotEmpty()) {
-                listUniqueNick.add(nick)
-
-
-                val gson = Gson()
-                val jsonString = gson.toJson(listUniqueNick)
-
-// Save the JSON string in SharedPreferences
-                val sharedPreferences = getSharedPreferences("UniqueNick", Context.MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.putString("UniqueNick", jsonString)
-                editor.apply()
-            }
-
-            boolList.add(isCheckedVerif)
-
-            val gson = Gson()
-            val json = gson.toJson(boolList)
-
-            val sharedPrefsBool = this.getSharedPreferences("myPrefsBool", Context.MODE_PRIVATE)
-
-            val editorBool = sharedPrefsBool.edit()
-
-            editorBool.putString("boolListKey", json)
-
-            editorBool.apply()
-
-
-
-
-            val context = this
-            val bitmap = (UniqueAvatarImage.drawable as BitmapDrawable).bitmap
-            val file = File(context.externalCacheDir, "imageU.png")
-            val outputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-            bitmapArray.add(bitmap)
-            outputStream.close()
-
-
-
-            val sharedPrefs = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
-            val editor = sharedPrefs.edit()
-
-// Create a directory to store the bitmap files
-            val dir = File(applicationContext.filesDir, "bitmapDir")
-            if (!dir.exists()) {
-                dir.mkdir()
-            }
-
-            val paths = ArrayList<String>()
-
-            for (bitmap in bitmapArray) {
-                // Create a unique file name for each bitmap
-                val fileName = "bitmap_${System.currentTimeMillis()}.png"
-                val file = File(dir, fileName)
-
-                // Save the bitmap to the file
-                val stream = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                stream.close()
-
-                paths.add(file.absolutePath)
-            }
-
-// Store the list of file paths in SharedPreferences
-            editor.putInt("bitmapCount", paths.size)
-            for (i in paths.indices) {
-                editor.putString("bitmap_$i", paths[i])
-            }
-            editor.apply()
-
-
-            dialogU.dismiss()
-
+        for (i in 0 until bitmapArray.size) {
 
             val newCommentLayout = LayoutInflater.from(this).inflate(R.layout.comment_layout, null)
             val avatarImage = newCommentLayout.findViewById<ImageView>(R.id.avatarImage)
@@ -482,136 +286,399 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
             val commentText = newCommentLayout.findViewById<TextView>(R.id.commentText)
             val idUnique = newCommentLayout.findViewById<TextView>(R.id.idUnique)
             val verification = newCommentLayout.findViewById<ImageView>(R.id.verification)
-            Log.e(TAG, bitmapArray.toString())
-            avatarImage.setImageBitmap(bitmapArray.last())
-            nicknameText.text = nick
-            commentText.text = comment
-            idUnique.setText(bitmapArray.size.toString())
-            if(isCheckedVerif){
-                verification.alpha=1F
-            }else{
-                verification.alpha=0F;
+            Log.e(TAG, "bitmapArray " + bitmapArray.toString())
+            Log.e(TAG, listUniqueNick.toString())
+            avatarImage.setImageBitmap(bitmapArray[i])
+            nicknameText.text = listUniqueNick[i]
+            commentText.text = listUniqueComment[i]
+            idUnique.setText((i + 1).toString())
+            if (boolList[i]) {
+                verification.alpha = 1F
+            } else {
+                verification.alpha = 0F;
             }
-
             commentLayout.addView(newCommentLayout)
             scrollView.post {
                 scrollView.fullScroll(View.FOCUS_DOWN)
             }
 
 
-        }else{
-            Toast.makeText(this,"Заполните все поля и загружайте аватарку",Toast.LENGTH_LONG).show()
         }
-    }
 
 
-    cancelButton.setOnClickListener {
-        dialogU.dismiss()
-    }
+        val dialogU = Dialog(this)
+        dialogU.setContentView(R.layout.unique_comment)
+        UniqueAvatarImage = dialogU.findViewById<ImageView>(R.id.avatarImage)
 
-    dialogU.show()
 
-}
+        Log.e(TAG, listUniqueNick.toString())
+        Log.e(TAG, listUniqueComment.toString())
+        Log.e(TAG, bitmapArray.toString())
+
+        addUniqueCommentButton.setOnClickListener {
+
+            val width = resources.displayMetrics.widthPixels * 0.99 // adjust this value as needed
+            val height = resources.displayMetrics.heightPixels * 0.4 // adjust this value as needed
+            dialogU.window?.setLayout(width.toInt(), height.toInt())
+
+
+            val saveButton = dialogU.findViewById<Button>(R.id.saveUnique)
+            val cancelButton = dialogU.findViewById<Button>(R.id.cancelUnique)
+            val verifCheck = dialogU.findViewById<CheckBox>(R.id.verificationCheck)
+            val addCont = dialogU.findViewById<Button>(R.id.addContinue)
+            nickField = dialogU.findViewById(R.id.nicknameText)
+            commentField = dialogU.findViewById(R.id.commentText)
+            if (savedEditTextValueLang == "") {
+                saveButton.text = "Сохранить"
+                cancelButton.text = "Отменить"
+                nickField.hint = "Никнейм"
+                commentField.hint = "Коммент"
+
+
+            } else {
+                if (savedEditTextValueLang == "РУ") {
+                    saveButton.text = "Сохранить"
+                    cancelButton.text = "Отменить"
+                    nickField.hint = "Никнейм"
+                    commentField.hint = "Коммент"
+                } else {
+                    saveButton.text = "Save"
+                    cancelButton.text = "Cancel"
+                    nickField.hint = "Nickname"
+                    commentField.hint = "Comment"
+                }
+            }
+            addCont.setOnClickListener {
+                drw = UniqueAvatarImage.drawable
+// Compare the drawable resource to a specific drawable resource using its resource ID
+                hasnoUserIcon =
+                    !drw.getConstantState()!!
+                        .equals(getResources().getDrawable(R.drawable.no_user).getConstantState())
+                Log.e(TAG, hasnoUserIcon.toString())
+                if (commentField.text.toString().isNotEmpty() && nickField.text.toString()
+                        .isNotEmpty() && hasnoUserIcon
+                ) {
+
+                    var comment = commentField.text.toString()
+                    var nick = nickField.text.toString()
+                    if (comment.isNotEmpty()) {
+                        listUniqueComment.add(comment)
+
+                        commentField.text = null
+                        val gson = Gson()
+                        val jsonString = gson.toJson(listUniqueComment)
+
+// Save the JSON string in SharedPreferences
+                        val sharedPreferences =
+                            getSharedPreferences("UniqueComment", Context.MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        editor.putString("UniqueComment", jsonString)
+                        editor.apply()
+
+
+                    }
+                    if (nick.isNotEmpty()) {
+                        listUniqueNick.add(nick)
+
+
+                        val gson = Gson()
+                        val jsonString = gson.toJson(listUniqueNick)
+
+// Save the JSON string in SharedPreferences
+                        val sharedPreferences =
+                            getSharedPreferences("UniqueNick", Context.MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        editor.putString("UniqueNick", jsonString)
+                        editor.apply()
+                    }
+
+                    boolList.add(isCheckedVerif)
+
+                    val gson = Gson()
+                    val json = gson.toJson(boolList)
+
+                    val sharedPrefsBool =
+                        this.getSharedPreferences("myPrefsBool", Context.MODE_PRIVATE)
+
+                    val editorBool = sharedPrefsBool.edit()
+
+                    editorBool.putString("boolListKey", json)
+
+                    editorBool.apply()
+
+
+                    val context = this
+                    val bitmap = (UniqueAvatarImage.drawable as BitmapDrawable).bitmap
+                    val file = File(context.externalCacheDir, "imageU.png")
+                    val outputStream = FileOutputStream(file)
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                    bitmapArray.add(bitmap)
+                    outputStream.close()
+
+
+                    val sharedPrefs = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
+
+                    val pathsx = ArrayList<String>()
+// Create a directory to store the bitmap files
+                    val dir = File(applicationContext.filesDir, "bitmapDir")
+                    if (!dir.exists()) {
+                        dir.mkdir()
+                    }
+                    // Define a coroutine scope
+                    CoroutineScope(Dispatchers.Default).launch {
+                        // Iterate through each bitmap in the array
+                        bitmapArray.forEach { bitmap ->
+                            // Create a unique file name for each bitmap
+                            val fileName = "bitmap_${System.currentTimeMillis()}.png"
+                            val file = File(dir, fileName)
+
+                            // Save the bitmap to the file in a background thread
+                            withContext(Dispatchers.IO) {
+                                val stream = FileOutputStream(file)
+                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                                stream.close()
+                            }
+
+                            pathsx.add(file.absolutePath)
+                        }
+
+                        // Store the list of file paths in SharedPreferences in the main thread
+                        withContext(Dispatchers.Main) {
+                            val editor = sharedPrefs.edit()
+                            editor.putInt("bitmapCount", pathsx.size)
+                            for (i in pathsx.indices) {
+                                editor.putString("bitmap_$i", pathsx[i])
+                            }
+                            editor.apply()
+                        }
+                    }
+
+
+
+
+                val newCommentLayout =
+                    LayoutInflater.from(this).inflate(R.layout.comment_layout, null)
+                val avatarImage = newCommentLayout.findViewById<ImageView>(R.id.avatarImage)
+                val nicknameText = newCommentLayout.findViewById<TextView>(R.id.nicknameText)
+                val commentText = newCommentLayout.findViewById<TextView>(R.id.commentText)
+                val idUnique = newCommentLayout.findViewById<TextView>(R.id.idUnique)
+                val verification = newCommentLayout.findViewById<ImageView>(R.id.verification)
+                Log.e(TAG, bitmapArray.toString())
+                avatarImage.setImageBitmap(bitmapArray.last())
+                nicknameText.text = nick
+                commentText.text = comment
+                idUnique.setText(bitmapArray.size.toString())
+                if (isCheckedVerif) {
+                    verification.alpha = 1F
+                } else {
+                    verification.alpha = 0F;
+                }
+
+                commentLayout.addView(newCommentLayout)
+                scrollView.post {
+                    scrollView.fullScroll(View.FOCUS_DOWN)
+                }
+
+
+            } else {
+            Toast.makeText(this, "Заполните все поля и загружайте аватарку", Toast.LENGTH_LONG)
+                .show()
+                }
+
+            commentField.text = null
+        }
+
+
+
+            verifCheck.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    isCheckedVerif = true
+                } else {
+                    isCheckedVerif = false
+                }
+            }
+
+
+            commentField.text = null
+            nickField.text = null
+            isCheckedVerif = false
+            verifCheck.isChecked = false
+            UniqueAvatarImage.setImageResource(R.drawable.no_user)
+
+            UniqueAvatarImage.setOnClickListener {
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                        PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
+                    )
+                } else {
+                    val intent =
+                        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE)
+                }
+
+
+            }
+
+
+            saveButton.setOnClickListener {
+                Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
+                Log.e(TAG, nickField.text.toString().isNotEmpty().toString())
+                Log.e(TAG, (UniqueAvatarImage != null).toString())
+
+
+                coment()
+                dialogU.dismiss()
+            }
+
+
+            cancelButton.setOnClickListener {
+                dialogU.dismiss()
+            }
+
+            dialogU.show()
+
+        }
 
 
         deleteUniqueCommentButton.setOnClickListener {
             val dialog = Dialog(this)
             dialog.setContentView(R.layout.add_nick_layout)
 
-            val width = resources.displayMetrics.widthPixels *0.99 // adjust this value as needed
+            val width = resources.displayMetrics.widthPixels * 0.99 // adjust this value as needed
             val height = resources.displayMetrics.heightPixels * 0.4 // adjust this value as needed
             dialog.window?.setLayout(width.toInt(), height.toInt())
 
 
             val saveButton = dialog.findViewById<Button>(R.id.dialogSaveBtn)
             val cancelButton = dialog.findViewById<Button>(R.id.dialogCancelBtn)
+            val addfile=dialog.findViewById<Button>(R.id.addFile)
+            addfile.alpha=0F
+            if (savedEditTextValueLang == "") {
+                saveButton.text = "Удалить"
+                cancelButton.text = "Отменить"
 
-            if(savedEditTextValueLang==""){
-                saveButton.text="Удалить"
-                cancelButton.text="Отменить"
 
+            } else {
+                if (savedEditTextValueLang == "РУ") {
+                    saveButton.text = "Удалить"
+                    cancelButton.text = "Отменить"
 
-
-            }else{
-                if(savedEditTextValueLang=="РУ"){
-                    saveButton.text="Удалить"
-                    cancelButton.text="Отменить"
-
-                }else{
-                    saveButton.text="Delete"
-                    cancelButton.text="Cancel"
+                } else {
+                    saveButton.text = "Delete"
+                    cancelButton.text = "Cancel"
 
                 }
             }
 
 
-            nickField=dialog.findViewById(R.id.dialogtxtNick)
-            nickField.text=null
-            nickField.hint="1"
+            nickField = dialog.findViewById(R.id.dialogtxtNick)
+            nickField.text = null
+            nickField.hint = "1"
 
             saveButton.setOnClickListener {
 
                 var text = nickField.text.toString()
                 if (text.isNotEmpty()) {
 
-                    listUniqueComment.removeAt(text.toInt()-1)
-                    listUniqueNick.removeAt(text.toInt()-1)
-                    bitmapArray.removeAt(text.toInt()-1)
-
+                    listUniqueComment.removeAt(text.toInt() - 1)
+                    listUniqueNick.removeAt(text.toInt() - 1)
+                    bitmapArray.removeAt(text.toInt() - 1)
+                    boolList.removeAt(text.toInt() - 1)
                     val gson = Gson()
                     val jsonString = gson.toJson(listUniqueComment)
 
 // Save the JSON string in SharedPreferences
-                    val sharedPreferences = getSharedPreferences("UniqueComment", Context.MODE_PRIVATE)
+                    val sharedPreferences =
+                        getSharedPreferences("UniqueComment", Context.MODE_PRIVATE)
                     val editor = sharedPreferences.edit()
                     editor.putString("UniqueComment", jsonString)
                     editor.apply()
 
 
+                    val gsonBool = Gson()
+                    val json = gsonBool.toJson(boolList)
+
+                    val sharedPrefsBool =
+                        this.getSharedPreferences("myPrefsBool", Context.MODE_PRIVATE)
+
+                    val editorBool = sharedPrefsBool.edit()
+
+                    editorBool.putString("boolListKey", json)
+
+                    editorBool.apply()
+
                     val gsonNick = Gson()
                     val jsonStringNick = gsonNick.toJson(listUniqueComment)
 
 // Save the JSON string in SharedPreferences
-                    val sharedPreferencesNick = getSharedPreferences("UniqueNick", Context.MODE_PRIVATE)
+                    val sharedPreferencesNick =
+                        getSharedPreferences("UniqueNick", Context.MODE_PRIVATE)
                     val editorNick = sharedPreferencesNick.edit()
                     editorNick.putString("UniqueNick", jsonStringNick)
                     editorNick.apply()
 
 
+//                    val sharedPreferencesx = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
+//                    val editorx = sharedPreferencesx.edit()
+//
+//// Create a directory to store the bitmap files
+//                    val dir = File(applicationContext.filesDir, "bitmapDir")
+//                    dir.mkdirs()
+//
+//                    val paths = ArrayList<String>()
+//
+//// Save the bitmaps to files and add the file paths to the list
+//                    for ((index, bitmap) in bitmapArray.withIndex()) {
+//                        // Create a unique file name for each bitmap
+//                        val fileName = "bitmap_${System.currentTimeMillis() + index}.png"
+//                        val file = File(dir, fileName)
+//
+//                        // Save the bitmap to the file
+//                        FileOutputStream(file).use { stream ->
+//                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+//                        }
+//
+//                        paths.add(file.absolutePath)
+//                    }
+//
+//// Store the list of file paths in SharedPreferences
+//                    editorx.putStringSet("bitmapPaths", paths.toSet())
+//                    editorx.apply()
+
+                    saveImUniq()
 
 
-                    val sharedPrefs = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
-                    val editorBit = sharedPrefs.edit()
-                    val set: HashSet<String> = HashSet()
-
-                    for (bitmap in bitmapArray) {
-                        val stream = ByteArrayOutputStream()
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                        val byteArray = stream.toByteArray()
-                        val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
-                        set.add(base64String)
 
 
-                    }
-
-                    editorBit.putStringSet("bitmapList", set)
-                    editorBit.apply()
-
-
+                    Log.e(TAG, bitmapArray.toString())
                 }
                 commentLayout.removeAllViews()
-                for(i in 0 until bitmapArray.size){
+                for (i in 0 until bitmapArray.size) {
 
-                    val newCommentLayout = LayoutInflater.from(this).inflate(R.layout.comment_layout, null)
+                    val newCommentLayout =
+                        LayoutInflater.from(this).inflate(R.layout.comment_layout, null)
                     val avatarImage = newCommentLayout.findViewById<ImageView>(R.id.avatarImage)
                     val nicknameText = newCommentLayout.findViewById<TextView>(R.id.nicknameText)
                     val commentText = newCommentLayout.findViewById<TextView>(R.id.commentText)
-                    val idUnique=newCommentLayout.findViewById<TextView>(R.id.idUnique)
-                    Log.e(TAG,bitmapArray.toString())
+                    val verification = newCommentLayout.findViewById<ImageView>(R.id.verification)
+                    val idUnique = newCommentLayout.findViewById<TextView>(R.id.idUnique)
+                    Log.e(TAG, bitmapArray.toString())
                     avatarImage.setImageBitmap(bitmapArray[i])
                     nicknameText.text = listUniqueNick[i]
                     commentText.text = listUniqueComment[i]
-                    idUnique.setText((i+1).toString())
+                    if (boolList[i]) {
+                        verification.alpha = 1F
+                    } else {
+                        verification.alpha = 0F;
+                    }
+
+                    idUnique.setText((i + 1).toString())
                     commentLayout.addView(newCommentLayout)
                     scrollView.post {
                         scrollView.fullScroll(View.FOCUS_DOWN)
@@ -640,13 +707,21 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
 
 
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 200)
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                200
+            )
         }
 
         val fileList = dir.listFiles()
         val uriList = ArrayList<Uri>()
-        if(fileList!=null) {
+        if (fileList != null) {
 
             for (file in fileList) {
                 val uri = Uri.fromFile(file)
@@ -659,7 +734,7 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
             val imageView = ImageView(this)
             val layoutParams = GridLayout.LayoutParams()
             layoutParams.width = widthImage.toInt()
-            layoutParams.height =widthImage.toInt()
+            layoutParams.height = widthImage.toInt()
             imageView.layoutParams = layoutParams
             imageView.scaleType = ImageView.ScaleType.CENTER_CROP
             imageView.setPadding(5, 5, 5, 5)
@@ -673,55 +748,57 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
             val dialog = Dialog(this)
             dialog.setContentView(R.layout.add_nick_layout)
 
-            val width = resources.displayMetrics.widthPixels *0.99 // adjust this value as needed
+            val width = resources.displayMetrics.widthPixels * 0.99 // adjust this value as needed
             val height = resources.displayMetrics.heightPixels * 0.4 // adjust this value as needed
             dialog.window?.setLayout(width.toInt(), height.toInt())
 
 
             val saveButton = dialog.findViewById<Button>(R.id.dialogSaveBtn)
             val cancelButton = dialog.findViewById<Button>(R.id.dialogCancelBtn)
+            val addfile=dialog.findViewById<Button>(R.id.addFile)
+            addfile.alpha=0F
+            if (savedEditTextValueLang == "") {
+                saveButton.text = "Удалить"
+                cancelButton.text = "Отменить"
 
-            if(savedEditTextValueLang==""){
-                saveButton.text="Удалить"
-                cancelButton.text="Отменить"
 
+            } else {
+                if (savedEditTextValueLang == "РУ") {
+                    saveButton.text = "Удалить"
+                    cancelButton.text = "Отменить"
 
-
-            }else{
-                if(savedEditTextValueLang=="РУ"){
-                    saveButton.text="Удалить"
-                    cancelButton.text="Отменить"
-
-                }else{
-                    saveButton.text="Delete"
-                    cancelButton.text="Cancel"
+                } else {
+                    saveButton.text = "Delete"
+                    cancelButton.text = "Cancel"
 
                 }
             }
 
-            nickField=dialog.findViewById(R.id.dialogtxtNick)
-            nickField.hint="1"
+            nickField = dialog.findViewById(R.id.dialogtxtNick)
+            nickField.hint = "1"
 
             saveButton.setOnClickListener {
-
 
 
                 var text = nickField.text.toString()
                 if (text.isNotEmpty()) {
 
-                    val fileName = text +".jpg"
-                    Log.e(TAG,fileName)
+                    val fileName = text + ".jpg"
+                    Log.e(TAG, fileName)
                     val folder = dir
                     val fileToDelete = File(folder, fileName)
-                    Log.e(TAG,fileToDelete.absolutePath)
+                    Log.e(TAG, fileToDelete.absolutePath)
                     if (fileToDelete.exists()) {
                         val isDeleted = fileToDelete.delete()
-                        val folder = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "InstagramLive")
+                        val folder = File(
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                            "InstagramLive"
+                        )
                         val files = folder.listFiles()
 
                         for (i in 0 until files.size) {
                             val file = files[i]
-                            var a=i+1
+                            var a = i + 1
                             val fileName = "$a.jpg"
                             val newFile = File(folder, fileName)
                             if (file.exists()) {
@@ -730,13 +807,13 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
                         }
 
 
-                        Log.e(TAG,isDeleted.toString())
+                        Log.e(TAG, isDeleted.toString())
                         if (isDeleted) {
                             gridLayout.removeAllViews()
 
                             val fileList = dir.listFiles()
                             val uriList = ArrayList<Uri>()
-                            if(fileList!=null) {
+                            if (fileList != null) {
 
                                 for (file in fileList) {
                                     val uri = Uri.fromFile(file)
@@ -750,7 +827,7 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
 
                                 val layoutParams = GridLayout.LayoutParams()
                                 layoutParams.width = widthImage.toInt()
-                                layoutParams.height =widthImage.toInt()
+                                layoutParams.height = widthImage.toInt()
                                 imageView.layoutParams = layoutParams
                                 imageView.scaleType = ImageView.ScaleType.CENTER_CROP
                                 imageView.setPadding(5, 5, 5, 5)
@@ -763,13 +840,11 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
 
                         } else {
                             // failed to delete file
-                            Log.e(TAG,uriList.toString())
+                            Log.e(TAG, uriList.toString())
                         }
                     } else {
                         // file does not exist
                     }
-
-
 
 
                 }
@@ -790,15 +865,13 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
 
 
 
-        addAvatarButton.setOnClickListener{
+        addAvatarButton.setOnClickListener {
 
-          val intent = Intent(Intent.ACTION_GET_CONTENT)
-          intent.type = "image/*"
-          startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1)
-      }
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "image/*"
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1)
+        }
 
-        var list = mutableListOf<String>()
-        var listComment = mutableListOf<String>()
 
 // Retrieve the JSON string from SharedPreferences
         val sharedPreferences = getSharedPreferences("nick", Context.MODE_PRIVATE)
@@ -806,20 +879,20 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
 
 // Convert the JSON string back to a MutableList using Gson
         val gson = Gson()
-        if (jsonString==null) {
-            Log.e(TAG,"okkk")
-        } else{
+        if (jsonString == null) {
+            Log.e(TAG, "okkk")
+        } else {
 
             list = gson.fromJson(jsonString, object : TypeToken<MutableList<String>>() {}.type)
 
-        Log.e(TAG, list.toString())
+            Log.e(TAG, list.toString())
 // Display the MutableList in a TextView
 
             var result = ""
             for ((index, element) in list.withIndex()) {
-                result += (index+1).toString()+". $element\n"
+                result += (index + 1).toString() + ". $element\n"
             }
-            NickTextView.text=result
+            NickTextView.text = result
 
         }
 
@@ -829,20 +902,23 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
 
 // Convert the JSON string back to a MutableList using Gson
         val gsonComment = Gson()
-        if (jsonStringComment==null) {
-            Log.e(TAG,"okkk")
-        } else{
+        if (jsonStringComment == null) {
+            Log.e(TAG, "okkk")
+        } else {
 
-            listComment = gsonComment.fromJson(jsonStringComment, object : TypeToken<MutableList<String>>() {}.type)
+            listComment = gsonComment.fromJson(
+                jsonStringComment,
+                object : TypeToken<MutableList<String>>() {}.type
+            )
 
             Log.e(TAG, listComment.toString())
 // Display the MutableList in a TextView
 
             var result = ""
             for ((index, element) in listComment.withIndex()) {
-                result += (index+1).toString()+". $element\n"
+                result += (index + 1).toString() + ". $element\n"
             }
-            CommentTextView.text=result
+            CommentTextView.text = result
 
         }
 
@@ -850,33 +926,37 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
             val dialog = Dialog(this)
             dialog.setContentView(R.layout.add_nick_layout)
 
-            val width = resources.displayMetrics.widthPixels *0.99 // adjust this value as needed
+            val width = resources.displayMetrics.widthPixels * 0.99 // adjust this value as needed
             val height = resources.displayMetrics.heightPixels * 0.4 // adjust this value as needed
             dialog.window?.setLayout(width.toInt(), height.toInt())
 
 
             val saveButton = dialog.findViewById<Button>(R.id.dialogSaveBtn)
             val cancelButton = dialog.findViewById<Button>(R.id.dialogCancelBtn)
-            nickField=dialog.findViewById(R.id.dialogtxtNick)
+            val selFileButton = dialog.findViewById<Button>(R.id.addFile)
+            nickField = dialog.findViewById(R.id.dialogtxtNick)
 
-            if(savedEditTextValueLang==""){
-                saveButton.text="Сохранить"
-                cancelButton.text="Отменить"
+            if (savedEditTextValueLang == "") {
+                saveButton.text = "Сохранить"
+                cancelButton.text = "Отменить"
 
 
+            } else {
+                if (savedEditTextValueLang == "РУ") {
+                    saveButton.text = "Сохранить"
+                    cancelButton.text = "Отменить"
 
-            }else{
-                if(savedEditTextValueLang=="РУ"){
-                    saveButton.text="Сохранить"
-                    cancelButton.text="Отменить"
-
-                }else{
-                    saveButton.text="Save"
-                    cancelButton.text="Cancel"
+                } else {
+                    saveButton.text = "Save"
+                    cancelButton.text = "Cancel"
 
                 }
             }
+            selFileButton.setOnClickListener {
+                selectTxtFile()
 
+                dialog.dismiss()
+            }
             saveButton.setOnClickListener {
 
                 var text = nickField.text.toString()
@@ -885,6 +965,7 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
                     list.add(text)
 
                     NickTextView.append(list.size.toString() + ".$text\n")
+
 
                     val gson = Gson()
                     val jsonString = gson.toJson(list)
@@ -914,48 +995,48 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
             val dialog = Dialog(this)
             dialog.setContentView(R.layout.add_nick_layout)
 
-            val width = resources.displayMetrics.widthPixels *0.99 // adjust this value as needed
+            val width = resources.displayMetrics.widthPixels * 0.99 // adjust this value as needed
             val height = resources.displayMetrics.heightPixels * 0.4 // adjust this value as needed
             dialog.window?.setLayout(width.toInt(), height.toInt())
 
 
             val saveButton = dialog.findViewById<Button>(R.id.dialogSaveBtn)
             val cancelButton = dialog.findViewById<Button>(R.id.dialogCancelBtn)
+            val addfile=dialog.findViewById<Button>(R.id.addFile)
+            addfile.alpha=0F
+            if (savedEditTextValueLang == "") {
+                saveButton.text = "Удалить"
+                cancelButton.text = "Отменить"
 
-            if(savedEditTextValueLang==""){
-                saveButton.text="Удалить"
-                cancelButton.text="Отменить"
 
+            } else {
+                if (savedEditTextValueLang == "РУ") {
+                    saveButton.text = "Удалить"
+                    cancelButton.text = "Отменить"
 
-
-            }else{
-                if(savedEditTextValueLang=="РУ"){
-                    saveButton.text="Удалить"
-                    cancelButton.text="Отменить"
-
-                }else{
-                    saveButton.text="Delete"
-                    cancelButton.text="Cancel"
+                } else {
+                    saveButton.text = "Delete"
+                    cancelButton.text = "Cancel"
 
                 }
             }
 
-            nickField=dialog.findViewById(R.id.dialogtxtNick)
-            nickField.hint="1"
+            nickField = dialog.findViewById(R.id.dialogtxtNick)
+            nickField.hint = "1"
 
             saveButton.setOnClickListener {
 
                 var text = nickField.text.toString()
                 if (text.isNotEmpty()) {
 
-                    list.removeAt(text.toInt()-1)
+                    list.removeAt(text.toInt() - 1)
 
 
                     var result = ""
                     for ((index, element) in list.withIndex()) {
-                        result += (index+1).toString()+". $element\n"
+                        result += (index + 1).toString() + ". $element\n"
                     }
-                    NickTextView.text=result
+                    NickTextView.text = result
 
                     val gson = Gson()
                     val jsonString = gson.toJson(list)
@@ -968,7 +1049,7 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
 
 
                 }
-                Log.e(TAG,list.toString())
+                Log.e(TAG, list.toString())
 
 
                 dialog.dismiss()
@@ -991,29 +1072,34 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
             val dialog = Dialog(this)
             dialog.setContentView(R.layout.add_nick_layout)
 
-            val width = resources.displayMetrics.widthPixels *0.99 // adjust this value as needed
+            val width = resources.displayMetrics.widthPixels * 0.99 // adjust this value as needed
             val height = resources.displayMetrics.heightPixels * 0.4 // adjust this value as needed
             dialog.window?.setLayout(width.toInt(), height.toInt())
 
 
             val saveButton = dialog.findViewById<Button>(R.id.dialogSaveBtn)
             val cancelButton = dialog.findViewById<Button>(R.id.dialogCancelBtn)
+            val selFileButton = dialog.findViewById<Button>(R.id.addFile)
 
-            nickField=dialog.findViewById(R.id.dialogtxtNick)
-            if(savedEditTextValueLang==""){
-                saveButton.text="Сохранить"
-                cancelButton.text="Отменить"
+            selFileButton.setOnClickListener {
+                selectCommentsFile()
+
+                dialog.dismiss()
+            }
+            nickField = dialog.findViewById(R.id.dialogtxtNick)
+            if (savedEditTextValueLang == "") {
+                saveButton.text = "Сохранить"
+                cancelButton.text = "Отменить"
 
 
+            } else {
+                if (savedEditTextValueLang == "РУ") {
+                    saveButton.text = "Сохранить"
+                    cancelButton.text = "Отменить"
 
-            }else{
-                if(savedEditTextValueLang=="РУ"){
-                    saveButton.text="Сохранить"
-                    cancelButton.text="Отменить"
-
-                }else{
-                    saveButton.text="Save"
-                    cancelButton.text="Cancel"
+                } else {
+                    saveButton.text = "Save"
+                    cancelButton.text = "Cancel"
 
                 }
             }
@@ -1052,52 +1138,51 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
         deleteCommentButton.setOnClickListener {
 
 
-
             val dialog = Dialog(this)
             dialog.setContentView(R.layout.add_nick_layout)
 
-            val width = resources.displayMetrics.widthPixels *0.99 // adjust this value as needed
+            val width = resources.displayMetrics.widthPixels * 0.99 // adjust this value as needed
             val height = resources.displayMetrics.heightPixels * 0.4 // adjust this value as needed
             dialog.window?.setLayout(width.toInt(), height.toInt())
 
 
             val saveButton = dialog.findViewById<Button>(R.id.dialogSaveBtn)
             val cancelButton = dialog.findViewById<Button>(R.id.dialogCancelBtn)
+            val addfile=dialog.findViewById<Button>(R.id.addFile)
+            addfile.alpha=0F
+            if (savedEditTextValueLang == "") {
+                saveButton.text = "Удалить"
+                cancelButton.text = "Отменить"
 
-            if(savedEditTextValueLang==""){
-                saveButton.text="Удалить"
-                cancelButton.text="Отменить"
 
+            } else {
+                if (savedEditTextValueLang == "РУ") {
+                    saveButton.text = "Удалить"
+                    cancelButton.text = "Отменить"
 
-
-            }else{
-                if(savedEditTextValueLang=="РУ"){
-                    saveButton.text="Удалить"
-                    cancelButton.text="Отменить"
-
-                }else{
-                    saveButton.text="Delete"
-                    cancelButton.text="Cancel"
+                } else {
+                    saveButton.text = "Delete"
+                    cancelButton.text = "Cancel"
 
                 }
             }
 
-            nickField=dialog.findViewById(R.id.dialogtxtNick)
-            nickField.hint="1"
+            nickField = dialog.findViewById(R.id.dialogtxtNick)
+            nickField.hint = "1"
 
             saveButton.setOnClickListener {
 
                 var text = nickField.text.toString()
                 if (text.isNotEmpty()) {
 
-                    listComment.removeAt(text.toInt()-1)
+                    listComment.removeAt(text.toInt() - 1)
 
 
                     var result = ""
                     for ((index, element) in listComment.withIndex()) {
-                        result += (index+1).toString()+". $element\n"
+                        result += (index + 1).toString() + ". $element\n"
                     }
-                    CommentTextView.text=result
+                    CommentTextView.text = result
 
                     val gson = Gson()
                     val jsonString = gson.toJson(listComment)
@@ -1110,7 +1195,7 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
 
 
                 }
-                Log.e(TAG,listComment.toString())
+                Log.e(TAG, listComment.toString())
 
 
                 dialog.dismiss()
@@ -1130,15 +1215,83 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
 
 
 
-        backBtn.setOnClickListener{
+        backBtn.setOnClickListener {
 
             val intent = Intent(this, settings::class.java)
             startActivity(intent)
 
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_TXT_FILE && resultCode == RESULT_OK) {
+            val selectedFile = data?.data
+            selectedFile?.let { uri ->
+                val inputStream = contentResolver.openInputStream(uri)
+                val text = inputStream?.bufferedReader()
+                    .use { it?.readText()?.replace(",", "\n")?.replace(",", "") }
+                val wordList = text?.split("\n")
+                val mutableList = mutableListOf<String>()
+                wordList?.forEach { word ->
+                    val newWords = word.split(" ")
+                    mutableList.addAll(newWords)
+                }
+                list.addAll(mutableList)
+            }
+            Log.e(TAG, list.toString())
+            var result = ""
+            for ((index, element) in list.withIndex()) {
+                result += (index + 1).toString() + ". $element\n"
+            }
+            NickTextView.text = result
+            val gson = Gson()
+            val jsonString = gson.toJson(list)
+
+// Save the JSON string in SharedPreferences
+            val sharedPreferences = getSharedPreferences("nick", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putString("nick", jsonString)
+            editor.apply()
+        }
+
+
+        if (requestCode == PICK_comment_FILE && resultCode == RESULT_OK) {
+            val selectedFile = data?.data
+            selectedFile?.let { uri ->
+                val inputStream = contentResolver.openInputStream(uri)
+                val text = inputStream?.bufferedReader()
+                    .use { it?.readText()?.replace(",", "\n")?.replace(",", "") }
+                val wordList = text?.split("\n")
+                val mutableList = mutableListOf<String>()
+                wordList?.forEach { word ->
+                    val newWords = word.split(" ")
+                    mutableList.addAll(newWords)
+                }
+                listComment.addAll(mutableList)
+            }
+            Log.e(TAG, list.toString())
+            var result = ""
+            for ((index, element) in listComment.withIndex()) {
+                result += (index + 1).toString() + ". $element\n"
+            }
+            CommentTextView.text = result
+            val gson = Gson()
+            val jsonString = gson.toJson(listComment)
+
+// Save the JSON string in SharedPreferences
+            val sharedPreferences = getSharedPreferences("comment", Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putString("comment", jsonString)
+            editor.apply()
+        }
+
+
+
+
+
+
         if (requestCode == 1 && resultCode == RESULT_OK) {
             val imagesUriList = ArrayList<Uri>()
             val clipData = data?.clipData
@@ -1179,8 +1332,8 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
             imageView.setPadding(5, 5, 5, 5)
             imageView.setImageURI(imagesUriList[i])
             gridLayout.addView(imageView)
-            widthImage= ((gridLayout.width - 150) / 3).toFloat()
-            Log.e(TAG,widthImage.toString())
+            widthImage = ((gridLayout.width - 150) / 3).toFloat()
+            Log.e(TAG, widthImage.toString())
 
 
             // Get the shared preferences
@@ -1204,7 +1357,7 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
             val files = dir.listFiles()
 
             val numberOfFiles = files?.size ?: 0
-            val file = File(dir, (numberOfFiles+1).toString()+ ".jpg")
+            val file = File(dir, (numberOfFiles + 1).toString() + ".jpg")
 
             val outputStream: OutputStream = FileOutputStream(file)
 
@@ -1216,11 +1369,10 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
             outputStream.close()
 
 
-
-
         }
 
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -1241,8 +1393,191 @@ Log.e(TAG, commentField.text.toString().isNotEmpty().toString())
 
     }
 
+    private val PICK_TXT_FILE = 1010
+    private val PICK_comment_FILE = 10101
+    private fun selectTxtFile() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            type = "text/plain"
+        }
+        startActivityForResult(intent, PICK_TXT_FILE)
+    }
+
+    private fun selectCommentsFile() {
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            type = "text/plain"
+        }
+        startActivityForResult(intent, PICK_comment_FILE)
+    }
+
+    private fun coment() {
+        drw = UniqueAvatarImage.drawable
+// Compare the drawable resource to a specific drawable resource using its resource ID
+        hasnoUserIcon =
+            !drw.getConstantState()!!
+                .equals(getResources().getDrawable(R.drawable.no_user).getConstantState())
+        Log.e(TAG, hasnoUserIcon.toString())
+        if (commentField.text.toString().isNotEmpty() && nickField.text.toString()
+                .isNotEmpty() && hasnoUserIcon
+        ) {
+
+            var comment = commentField.text.toString()
+            var nick = nickField.text.toString()
+            if (comment.isNotEmpty()) {
+                listUniqueComment.add(comment)
+
+                commentField.text = null
+                val gson = Gson()
+                val jsonString = gson.toJson(listUniqueComment)
+
+// Save the JSON string in SharedPreferences
+                val sharedPreferences = getSharedPreferences("UniqueComment", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putString("UniqueComment", jsonString)
+                editor.apply()
 
 
+            }
+            if (nick.isNotEmpty()) {
+                listUniqueNick.add(nick)
+
+
+                val gson = Gson()
+                val jsonString = gson.toJson(listUniqueNick)
+
+// Save the JSON string in SharedPreferences
+                val sharedPreferences = getSharedPreferences("UniqueNick", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putString("UniqueNick", jsonString)
+                editor.apply()
+            }
+
+            boolList.add(isCheckedVerif)
+
+            val gson = Gson()
+            val json = gson.toJson(boolList)
+
+            val sharedPrefsBool = this.getSharedPreferences("myPrefsBool", Context.MODE_PRIVATE)
+
+            val editorBool = sharedPrefsBool.edit()
+
+            editorBool.putString("boolListKey", json)
+
+            editorBool.apply()
+
+
+            val context = this
+            val bitmap = (UniqueAvatarImage.drawable as BitmapDrawable).bitmap
+            val file = File(context.externalCacheDir, "imageU.png")
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            bitmapArray.add(bitmap)
+            outputStream.close()
+
+
+//            val sharedPreferences = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
+//            val editor = sharedPreferences.edit()
+//
+//// Create a directory to store the bitmap files
+//            val dir = File(applicationContext.filesDir, "bitmapDir")
+//            dir.mkdirs()
+//
+//            val paths = ArrayList<String>()
+//
+//// Save the bitmaps to files and add the file paths to the list
+//            for ((index, bitmap) in bitmapArray.withIndex()) {
+//                // Create a unique file name for each bitmap
+//                val fileName = "bitmap_${System.currentTimeMillis() + index}.png"
+//                val file = File(dir, fileName)
+//
+//                // Save the bitmap to the file
+//                FileOutputStream(file).use { stream ->
+//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+//                }
+//
+//                paths.add(file.absolutePath)
+//            }
+//
+//// Store the list of file paths in SharedPreferences
+//            editor.putStringSet("bitmapPaths", paths.toSet())
+//            editor.apply()
+
+
+            saveImUniq()
+
+Log.e(TAG,bitmapArray.toString())
+            val newCommentLayout = LayoutInflater.from(this).inflate(R.layout.comment_layout, null)
+            val avatarImage = newCommentLayout.findViewById<ImageView>(R.id.avatarImage)
+            val nicknameText = newCommentLayout.findViewById<TextView>(R.id.nicknameText)
+            val commentText = newCommentLayout.findViewById<TextView>(R.id.commentText)
+            val idUnique = newCommentLayout.findViewById<TextView>(R.id.idUnique)
+            val verification = newCommentLayout.findViewById<ImageView>(R.id.verification)
+            Log.e(TAG, bitmapArray.toString())
+            avatarImage.setImageBitmap(bitmapArray.last())
+            nicknameText.text = nick
+            commentText.text = comment
+            idUnique.setText(bitmapArray.size.toString())
+            if (isCheckedVerif) {
+                verification.alpha = 1F
+            } else {
+                verification.alpha = 0F;
+            }
+
+            commentLayout.addView(newCommentLayout)
+            scrollView.post {
+                scrollView.fullScroll(View.FOCUS_DOWN)
+            }
+
+
+        } else {
+            Toast.makeText(this, "Заполните все поля и загружайте аватарку", Toast.LENGTH_LONG)
+                .show()
+        }
+
+        commentField.text = null
+    }
+
+    private fun saveImUniq() {
+
+
+        val sharedPrefs = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
+
+        val paths = ArrayList<String>()
+// Create a directory to store the bitmap files
+        val dir = File(applicationContext.filesDir, "bitmapDir")
+        if (!dir.exists()) {
+            dir.mkdir()
+        }
+
+        // Define a coroutine scope
+        CoroutineScope(Dispatchers.Default).launch {
+            // Iterate through each bitmap in the array
+            bitmapArray.forEach { bitmap ->
+                // Create a unique file name for each bitmap
+                val fileName = "bitmap_${System.currentTimeMillis()}.png"
+                val file = File(dir, fileName)
+
+                // Save the bitmap to the file in a background thread
+                withContext(Dispatchers.IO) {
+                    val stream = FileOutputStream(file)
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                    stream.close()
+                }
+
+                paths.add(file.absolutePath)
+            }
+
+            // Store the list of file paths in SharedPreferences in the main thread
+            withContext(Dispatchers.Main) {
+                val editor = sharedPrefs.edit()
+                editor.putInt("bitmapCount", paths.size)
+                for (i in paths.indices) {
+                    editor.putString("bitmap_$i", paths[i])
+                }
+                editor.apply()
+            }
+        }
+
+    }
 
 }
 

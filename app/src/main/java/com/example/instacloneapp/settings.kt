@@ -2,6 +2,7 @@ package com.example.instacloneapp
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
@@ -24,7 +25,9 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStreamReader
 
 
 @Suppress("DEPRECATION")
@@ -109,7 +112,7 @@ class settings : AppCompatActivity() {
             txtnumsebs.text="Число актива:"
             txtsms.text="сообщений в минуту"
             razbros.text="Разброс:"
-            addComTxt.text="Добавить комментарий:"
+            addComTxt.text="Дополнительные опции:"
             screenRec.text="Запись экрана: "
             saveSubs.text="Сохранить"
             saveNsms.text="Сохранить"
@@ -124,7 +127,7 @@ class settings : AppCompatActivity() {
                 txtnumsebs.text="Число актива:"
                 txtsms.text="сообщений в минуту"
                 razbros.text="Разброс:"
-                addComTxt.text="Добавить комментарий:"
+                addComTxt.text="Дополнительные опции:"
                 screenRec.text="Запись экрана: "
                 saveSubs.text="Сохранить"
                 saveNsms.text="Сохранить"
@@ -138,7 +141,7 @@ class settings : AppCompatActivity() {
                 txtnumsebs.text="Number of Views:"
                 txtsms.text="messages per minute"
                 razbros.text="Changing views:"
-                addComTxt.text="Add comments:"
+                addComTxt.text="More Options:"
                 screenRec.text="Screen recording: "
                 saveSubs.text="Save"
                 saveNsms.text="Save"
@@ -319,7 +322,7 @@ Log.e(TAG,isChecked.toString())
                 txtnumsebs.text="Number of Views:"
                 txtsms.text="messages per minute"
                 razbros.text="Changing views:"
-                addComTxt.text="Add comments:"
+                addComTxt.text="More Options:"
                 screenRec.text="Screen recording: "
                 saveSubs.text="Save"
                 saveNsms.text="Save"
@@ -478,9 +481,13 @@ stopService(intentForg)
         )
     }
 
+
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+
+
         if(requestCode!=REQUEST_CODE){
             Toast.makeText(this,"Unk Error",Toast.LENGTH_LONG).show()
             return
@@ -522,7 +529,8 @@ stopService(intentForg)
         }catch (e:Exception){
             e.printStackTrace()
         }
-    }
+ }
+
 
     private fun stopRecordingScreen() {
         if(virtualDisplay==null)

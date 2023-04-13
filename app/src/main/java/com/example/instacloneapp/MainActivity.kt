@@ -15,6 +15,7 @@ import android.os.*
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
@@ -101,6 +102,10 @@ class MainActivity : AppCompatActivity() {
         commentFieldHelper=findViewById(R.id.comment_field_helper)
         live=findViewById(R.id.live)
         publicateButton=findViewById(R.id.publicateButton)
+
+
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         /////////////////////////////////////////////
         ///////////////////////////////////////////
         val sharedPrefLang = getSharedPreferences("lang", Context.MODE_PRIVATE)
@@ -845,7 +850,12 @@ if(savedEditTextValueLang==""){
     }
     data class Comment(val nickname: String, val text: String, val avatar: Drawable)
 
+    override fun onDestroy() {
+        super.onDestroy()
 
+        // Clear the flag when the activity is destroyed
+        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    }
 
 }
 

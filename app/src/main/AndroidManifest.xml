@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION"
         />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -25,6 +26,7 @@
 
     <application
         android:allowBackup="true"
+
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/icon"
@@ -43,17 +45,23 @@
                 android:resource="@xml/file_paths" />
         </provider>
         <activity
+            android:screenOrientation="portrait"
             android:name=".AddComment"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".settings"
             android:exported="false" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:exported="false"
             android:label="@string/title_activity_start"
             android:theme="@style/Theme.InstaCloneApp.NoActionBar" />
+
         <activity
+            android:screenOrientation="portrait"
+
             android:name=".start_activity"
             android:exported="true">
             <intent-filter>
@@ -64,6 +72,8 @@
         </activity>
         <service android:name=".MediaProjectionService"
             android:foregroundServiceType="mediaProjection" />
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/>
     </application>
 
 </manifest>

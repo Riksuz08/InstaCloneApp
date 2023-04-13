@@ -18,6 +18,8 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -27,10 +29,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.transition.Transition
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.SimpleTarget
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
+import com.yalantis.ucrop.UCrop
+
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.util.ArrayList
-
 
 @Suppress("DEPRECATION")
 class start_activity : AppCompatActivity() {
@@ -53,7 +65,6 @@ class start_activity : AppCompatActivity() {
         saveusername = findViewById(R.id.saveusername);
         avatarImage = findViewById(R.id.avatarstart)
        settingsButton=findViewById(R.id.settings)
-
 
         val sharedPrefLang = getSharedPreferences("lang", Context.MODE_PRIVATE)
         val savedEditTextValueLang = sharedPrefLang.getString("edit_text_value", "")
@@ -108,6 +119,8 @@ class start_activity : AppCompatActivity() {
 
 
         avatarImage.setOnClickListener {
+
+
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.READ_EXTERNAL_STORAGE
@@ -119,9 +132,11 @@ class start_activity : AppCompatActivity() {
                     PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
                 )
             } else {
-                val intent =
-                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE)
+//                val intent =
+//                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//                startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE)
             }
 
 
@@ -173,12 +188,40 @@ class start_activity : AppCompatActivity() {
 
     }
 
-
+    //            val inputStream = contentResolver.openInputStream(imageUri!!)
+//            val bitmapX = BitmapFactory.decodeStream(inputStream)
+//
+//            val byteArrayOutputStream = ByteArrayOutputStream()
+//            bitmapX.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+//            val byteArray = byteArrayOutputStream.toByteArray()
+//
+//            val decoded = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+//            avatarImage.setImageBitmap(decoded)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
             val imageUri = data?.data
-            avatarImage.setImageURI(imageUri)
+            if (imageUri != null) {
+                // Start crop activity
+                CropImage.activity(imageUri)
+                    .setAspectRatio(1, 1)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .start(this)
+            }
+        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            // Handle crop result
+            val result = CropImage.getActivityResult(data)
+            if (resultCode == RESULT_OK) {
+                val croppedImageUri = result.uri
+                avatarImage.setImageURI(croppedImageUri)
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                // Handle error
+                val error = result.error
+                Toast.makeText(this, error.message, Toast.LENGTH_SHORT).show()
+            }
+
+//            avatarImage.setImageURI(imageUri)
+
             val context=this
             val bitmap = (avatarImage.drawable as BitmapDrawable).bitmap
             val file = File(context.externalCacheDir, "image.png")
