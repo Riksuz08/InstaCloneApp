@@ -59,19 +59,6 @@
                 android:textSize="11sp" />
 
 
-                <Button
-                    android:id="@+id/addContinue"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_centerInParent="true"
-                    android:layout_marginStart="5dp"
-                    android:layout_toEndOf="@id/commentText"
-
-                    android:background="@color/white"
-                    android:text="+"
-                    android:textAlignment="center"
-                    android:textColor="@color/live"
-                    android:textStyle="bold" />
             </RelativeLayout>
         </LinearLayout>
 <LinearLayout
@@ -94,6 +81,15 @@
         android:text="Отменить"
         android:backgroundTint="@color/live"
         android:textSize="8dp" />
+    <Button
+        android:id="@+id/addContinue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="+"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="15dp" />
 
 </LinearLayout>
     </LinearLayout>

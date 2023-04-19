@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/full"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ImageView
+        android:id="@+id/shtor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/shtor"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:id="@+id/livetextshtor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/shtor"
+       android:layout_centerHorizontal="true"
+        android:text="Прямой эфир "
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        android:textSize="20dp" />
+
+<RelativeLayout
+    android:layout_below="@id/livetextshtor"
+    android:layout_marginTop="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:background="@color/grey_dark"/>
+
+    <RelativeLayout
+        android:layout_below="@+id/livetextshtor"
+        android:layout_marginTop="10dp"
+        android:id="@+id/viewersContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/avatarImageView"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="10dp"
+        app:shapeAppearanceOverlay="@style/circular"
+        android:padding="1dp"
+
+        android:scaleType="centerCrop"
+        >
+
+    </com.google.android.material.imageview.ShapeableImageView>
+
+
+        <LinearLayout
+            android:id="@+id/UserInfo"
+            android:layout_marginTop="5dp"
+            android:layout_width="192dp"
+            android:layout_height="wrap_content"
+           android:layout_marginStart="15dp"
+            android:layout_toEndOf="@+id/avatarImageView"
+            android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/LiveNick"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                 />
+
+
+
+            <TextView
+                android:id="@+id/commentTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/grey"
+                android:textSize="16dp" />
+
+
+        </LinearLayout>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/whoview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/viewersContainer"
+        android:text="Кто смотрит"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginStart="20dp"
+        android:textSize="20dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_below="@id/whoview"
+        android:layout_height="wrap_content">
+
+    </RelativeLayout>
+    <ScrollView
+
+        android:id="@+id/commentScrollView"
+        android:layout_below="@id/whoview"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="bottom">
+
+        <LinearLayout
+            android:id="@+id/comLayoutx"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:foregroundGravity="bottom"/>
+
+    </ScrollView>
+
+</RelativeLayout>

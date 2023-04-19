@@ -30,10 +30,10 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/avatarImageView"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
             app:shapeAppearanceOverlay="@style/circular"
-
+android:layout_marginTop="3dp"
             android:padding="1dp"
 
             android:scaleType="centerCrop"
@@ -58,7 +58,7 @@
                     android:id="@+id/nickTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
 
                     android:textSize="11dp"
                     android:textStyle="bold" />
@@ -79,34 +79,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:textColor="@color/white"
+                android:textColor="@color/black"
+                android:textSize="11dp" />
+            <TextView
+                android:id="@+id/subsView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/black"
                 android:textSize="11dp" />
 
         </LinearLayout>
-<RelativeLayout
-    android:id="@+id/hiLay"
-    android:layout_marginStart="15dp"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/custom_button"
-    android:alpha="0"
-    >
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/hiBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="28dp"
-        android:layout_centerInParent="true"
-        android:alpha="0"
-        android:paddingHorizontal="10dp"
-        android:paddingTop="3dp"
-        android:text="👋 Помахать"
-        android:textColor="@color/white"
-        android:textSize="14dp" />
-
-
-
-</RelativeLayout>
+            <TextView
+                android:layout_width="61dp"
+                android:layout_height="41dp"
+                android:text="..."
+                android:textAlignment="center"
+                android:textSize="25dp"
+                android:textColor="@color/black"
+                android:layout_alignParentEnd="true"
+                android:textStyle="bold" />
+        </RelativeLayout>
     </LinearLayout>
 
     <ScrollView
@@ -122,7 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:foregroundGravity="bottom"></LinearLayout>
+            android:foregroundGravity="bottom"/>
 
     </ScrollView>
 </RelativeLayout>

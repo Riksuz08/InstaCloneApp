@@ -53,6 +53,7 @@
         tools:ignore="MissingConstraints" />
 
     <RelativeLayout
+        android:id="@+id/whoviewLayoutTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -359,22 +360,7 @@
             android:textSize="18dp" />
     </RelativeLayout>
 
-<!--    <RelativeLayout-->
-<!--        android:alpha="0"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="200dp"-->
-<!--        android:layout_alignTop="@+id/avataruserCenter"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_marginTop="-100dp"-->
 
-<!--        android:background="@drawable/custom_layput">-->
-
-
-<!--        <include-->
-
-<!--            layout="@layout/avanickclick"/>-->
-
-<!--    </RelativeLayout>-->
    <!--Comments layout-->
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -394,6 +380,28 @@
         </include>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/whoViewAbove"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_above="@+id/rev"
+        android:layout_below="@+id/whoviewLayoutTop"
+        android:layout_toStartOf="@+id/vid" />
+    <RelativeLayout
+        android:id="@+id/whoviewLayout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignTop="@+id/avataruserCenter"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="-100dp"
 
+        android:background="@drawable/custom_layput">
+
+
+        <include
+
+            layout="@layout/avanickclick"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

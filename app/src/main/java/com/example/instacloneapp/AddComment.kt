@@ -84,13 +84,17 @@ class AddComment : AppCompatActivity() {
     var boolList = mutableListOf<Boolean>()
     lateinit var scrollView: NestedScrollView
     lateinit var commentLayout: LinearLayout
-    val dir =
-        File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path + "/InstagramLive")
+lateinit var dir:File;
+    lateinit var dirx:File
 
     @SuppressLint("MissingInflatedId", "SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_comment)
+          dir =
+            File(cacheDir.path + "/InstagramLive")
+
+dirx=File(cacheDir.path+"/InstaUnique")
         addNickButton = findViewById(R.id.addNickButton)
         backBtn = findViewById(R.id.backBtn)
         NickTextView = findViewById(R.id.nickTxt)
@@ -201,24 +205,42 @@ class AddComment : AppCompatActivity() {
 
 
 
-        Log.e(TAG, bitmapArray.toString())
 
 
-        val sharedPrefsB = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
-        val count = sharedPrefsB.getInt("bitmapCount", 0)
+//
+//        val sharedPrefsB = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
+//        val count = sharedPrefsB.getInt("bitmapCount", 0)
+//        val bitmapArrayB = ArrayList<Bitmap>()
+//        for (i in 0 until count) {
+//            val path = sharedPrefsB.getString("bitmap_$i", null)
+//            if (path != null) {
+//                val file = File(path)
+//                if (file.exists()) {
+//                    val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+//                    bitmapArrayB.add(bitmap)
+//                    Log.e(TAG, bitmapArrayB.toString())
+//                }
+//            }
+//        }
         val bitmapArrayB = ArrayList<Bitmap>()
-        for (i in 0 until count) {
-            val path = sharedPrefsB.getString("bitmap_$i", null)
-            if (path != null) {
-                val file = File(path)
-                if (file.exists()) {
-                    val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+        val fileListx = dirx.listFiles()
+        val uriListx = ArrayList<Uri>()
+
+        if (fileListx != null) {
+            for (file in fileListx) {
+                val uri = Uri.fromFile(file)
+                uriListx.add(uri)
+            }
+
+            for (uri in uriListx) {
+                try {
+                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                     bitmapArrayB.add(bitmap)
-                    Log.e(TAG, bitmapArrayB.toString())
+                } catch (e: IOException) {
+                    e.printStackTrace()
                 }
             }
         }
-
 
         bitmapArray.addAll(bitmapArrayB)
 
@@ -349,6 +371,9 @@ class AddComment : AppCompatActivity() {
                 }
             }
             addCont.setOnClickListener {
+
+
+
                 drw = UniqueAvatarImage.drawable
 // Compare the drawable resource to a specific drawable resource using its resource ID
                 hasnoUserIcon =
@@ -407,56 +432,38 @@ class AddComment : AppCompatActivity() {
                     editorBool.apply()
 
 
-                    val context = this
-                    val bitmap = (UniqueAvatarImage.drawable as BitmapDrawable).bitmap
-                    val file = File(context.externalCacheDir, "imageU.png")
-                    val outputStream = FileOutputStream(file)
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-                    bitmapArray.add(bitmap)
+                    val bitmap: Bitmap = (UniqueAvatarImage.drawable as BitmapDrawable).bitmap
+
+
+
+
+
+                    if (!dirx.exists()) {
+                        dirx.mkdirs()
+                    }
+
+
+                    val files = dirx.listFiles()
+
+                    val numberOfFiles = files?.size ?: 0
+                    val file = File(dirx, (numberOfFiles + 1).toString() + ".jpg")
+
+                    val outputStream: OutputStream = FileOutputStream(file)
+
+// Compress the Bitmap to JPEG format with 100% quality
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+
+// Flush and close the output stream
+                    outputStream.flush()
                     outputStream.close()
 
 
-                    val sharedPrefs = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
+                 bitmapArray.add(bitmap)
 
-                    val pathsx = ArrayList<String>()
-// Create a directory to store the bitmap files
-                    val dir = File(applicationContext.filesDir, "bitmapDir")
-                    if (!dir.exists()) {
-                        dir.mkdir()
-                    }
-                    // Define a coroutine scope
-                    CoroutineScope(Dispatchers.Default).launch {
-                        // Iterate through each bitmap in the array
-                        bitmapArray.forEach { bitmap ->
-                            // Create a unique file name for each bitmap
-                            val fileName = "bitmap_${System.currentTimeMillis()}.png"
-                            val file = File(dir, fileName)
-
-                            // Save the bitmap to the file in a background thread
-                            withContext(Dispatchers.IO) {
-                                val stream = FileOutputStream(file)
-                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                                stream.close()
-                            }
-
-                            pathsx.add(file.absolutePath)
-                        }
-
-                        // Store the list of file paths in SharedPreferences in the main thread
-                        withContext(Dispatchers.Main) {
-                            val editor = sharedPrefs.edit()
-                            editor.putInt("bitmapCount", pathsx.size)
-                            for (i in pathsx.indices) {
-                                editor.putString("bitmap_$i", pathsx[i])
-                            }
-                            editor.apply()
-                        }
-                    }
+                    Log.e(TAG,bitmapArray.toString()+"in")
 
 
-
-
-                val newCommentLayout =
+                    val newCommentLayout =
                     LayoutInflater.from(this).inflate(R.layout.comment_layout, null)
                 val avatarImage = newCommentLayout.findViewById<ImageView>(R.id.avatarImage)
                 val nicknameText = newCommentLayout.findViewById<TextView>(R.id.nicknameText)
@@ -588,7 +595,33 @@ class AddComment : AppCompatActivity() {
 
                     listUniqueComment.removeAt(text.toInt() - 1)
                     listUniqueNick.removeAt(text.toInt() - 1)
-                    bitmapArray.removeAt(text.toInt() - 1)
+
+
+
+                        val fileName = text + ".jpg"
+                        val folder = dirx
+                        Log.e(TAG, folder.toString())
+                        val fileToDelete = File(folder, fileName)
+                        Log.e(TAG, fileToDelete.absolutePath)
+                        Log.e(TAG,fileToDelete.exists().toString())
+                        if (fileToDelete.exists()) {
+                            val isDeleted = fileToDelete.delete()
+                            Log.e(TAG, isDeleted.toString())
+                            val folder = File(cacheDir.path, "InstaUnique")
+                            val files = folder.listFiles()
+
+                            for (i in 0 until files.size) {
+                                val file = files[i]
+                                var a = i + 1
+                                val fileName = "$a.jpg"
+                                val newFile = File(folder, fileName)
+                                if (file.exists()) {
+                                    file.renameTo(newFile)
+                                }
+                            }
+
+                        }
+
                     boolList.removeAt(text.toInt() - 1)
                     val gson = Gson()
                     val jsonString = gson.toJson(listUniqueComment)
@@ -623,35 +656,28 @@ class AddComment : AppCompatActivity() {
                     editorNick.putString("UniqueNick", jsonStringNick)
                     editorNick.apply()
 
+                    bitmapArray.clear()
+                    val bitmapArrayB = ArrayList<Bitmap>()
+                    val fileListx = dirx.listFiles()
+                    val uriListx = ArrayList<Uri>()
 
-//                    val sharedPreferencesx = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
-//                    val editorx = sharedPreferencesx.edit()
-//
-//// Create a directory to store the bitmap files
-//                    val dir = File(applicationContext.filesDir, "bitmapDir")
-//                    dir.mkdirs()
-//
-//                    val paths = ArrayList<String>()
-//
-//// Save the bitmaps to files and add the file paths to the list
-//                    for ((index, bitmap) in bitmapArray.withIndex()) {
-//                        // Create a unique file name for each bitmap
-//                        val fileName = "bitmap_${System.currentTimeMillis() + index}.png"
-//                        val file = File(dir, fileName)
-//
-//                        // Save the bitmap to the file
-//                        FileOutputStream(file).use { stream ->
-//                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-//                        }
-//
-//                        paths.add(file.absolutePath)
-//                    }
-//
-//// Store the list of file paths in SharedPreferences
-//                    editorx.putStringSet("bitmapPaths", paths.toSet())
-//                    editorx.apply()
+                    if (fileListx != null) {
+                        for (file in fileListx) {
+                            val uri = Uri.fromFile(file)
+                            uriListx.add(uri)
+                        }
 
-                    saveImUniq()
+                        for (uri in uriListx) {
+                            try {
+                                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                                bitmapArrayB.add(bitmap)
+                            } catch (e: IOException) {
+                                e.printStackTrace()
+                            }
+                        }
+                    }
+
+                    bitmapArray.addAll(bitmapArrayB)
 
 
 
@@ -698,13 +724,6 @@ class AddComment : AppCompatActivity() {
 
             dialog.show()
         }
-
-
-
-
-
-
-
 
 
         if (ContextCompat.checkSelfPermission(
@@ -786,14 +805,14 @@ class AddComment : AppCompatActivity() {
                     val fileName = text + ".jpg"
                     Log.e(TAG, fileName)
                     val folder = dir
+                    Log.e(TAG, folder.toString())
                     val fileToDelete = File(folder, fileName)
                     Log.e(TAG, fileToDelete.absolutePath)
+                    Log.e(TAG,fileToDelete.exists().toString())
                     if (fileToDelete.exists()) {
                         val isDeleted = fileToDelete.delete()
-                        val folder = File(
-                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                            "InstagramLive"
-                        )
+                        Log.e(TAG,isDeleted.toString())
+                        val folder =  File(cacheDir.path , "InstagramLive")
                         val files = folder.listFiles()
 
                         for (i in 0 until files.size) {
@@ -1465,42 +1484,6 @@ class AddComment : AppCompatActivity() {
             editorBool.apply()
 
 
-            val context = this
-            val bitmap = (UniqueAvatarImage.drawable as BitmapDrawable).bitmap
-            val file = File(context.externalCacheDir, "imageU.png")
-            val outputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-            bitmapArray.add(bitmap)
-            outputStream.close()
-
-
-//            val sharedPreferences = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
-//            val editor = sharedPreferences.edit()
-//
-//// Create a directory to store the bitmap files
-//            val dir = File(applicationContext.filesDir, "bitmapDir")
-//            dir.mkdirs()
-//
-//            val paths = ArrayList<String>()
-//
-//// Save the bitmaps to files and add the file paths to the list
-//            for ((index, bitmap) in bitmapArray.withIndex()) {
-//                // Create a unique file name for each bitmap
-//                val fileName = "bitmap_${System.currentTimeMillis() + index}.png"
-//                val file = File(dir, fileName)
-//
-//                // Save the bitmap to the file
-//                FileOutputStream(file).use { stream ->
-//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-//                }
-//
-//                paths.add(file.absolutePath)
-//            }
-//
-//// Store the list of file paths in SharedPreferences
-//            editor.putStringSet("bitmapPaths", paths.toSet())
-//            editor.apply()
-
 
             saveImUniq()
 
@@ -1538,45 +1521,33 @@ Log.e(TAG,bitmapArray.toString())
 
     private fun saveImUniq() {
 
+        val bitmap: Bitmap = (UniqueAvatarImage.drawable as BitmapDrawable).bitmap
 
-        val sharedPrefs = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
 
-        val paths = ArrayList<String>()
-// Create a directory to store the bitmap files
-        val dir = File(applicationContext.filesDir, "bitmapDir")
-        if (!dir.exists()) {
-            dir.mkdir()
+
+
+
+        if (!dirx.exists()) {
+            dirx.mkdirs()
         }
 
-        // Define a coroutine scope
-        CoroutineScope(Dispatchers.Default).launch {
-            // Iterate through each bitmap in the array
-            bitmapArray.forEach { bitmap ->
-                // Create a unique file name for each bitmap
-                val fileName = "bitmap_${System.currentTimeMillis()}.png"
-                val file = File(dir, fileName)
 
-                // Save the bitmap to the file in a background thread
-                withContext(Dispatchers.IO) {
-                    val stream = FileOutputStream(file)
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                    stream.close()
-                }
+        val files = dirx.listFiles()
 
-                paths.add(file.absolutePath)
-            }
+        val numberOfFiles = files?.size ?: 0
+        val file = File(dirx, (numberOfFiles + 1).toString() + ".jpg")
 
-            // Store the list of file paths in SharedPreferences in the main thread
-            withContext(Dispatchers.Main) {
-                val editor = sharedPrefs.edit()
-                editor.putInt("bitmapCount", paths.size)
-                for (i in paths.indices) {
-                    editor.putString("bitmap_$i", paths[i])
-                }
-                editor.apply()
-            }
-        }
+        val outputStream: OutputStream = FileOutputStream(file)
 
+// Compress the Bitmap to JPEG format with 100% quality
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+
+// Flush and close the output stream
+        outputStream.flush()
+        outputStream.close()
+
+
+        bitmapArray.add(bitmap)
     }
 
 }

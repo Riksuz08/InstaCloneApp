@@ -13,9 +13,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.*
 import android.util.Log
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,12 +26,15 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import com.example.instacloneapp.databinding.ActivityMainBinding
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.collections.ArrayList
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 
@@ -42,14 +43,14 @@ class MainActivity : AppCompatActivity() {
     /////////////
 
     private lateinit var commentsLayout: LinearLayout;
+    private lateinit var viewersLayout: LinearLayout;
     private lateinit var commentContainer: LinearLayout;
     lateinit var username:TextView;
     private val commentsList = mutableListOf<Comment>()
 
     val random = Random()
     ///////////////////////////////
-
-
+    val avatarsRus = ArrayList<Drawable>()
     private lateinit var blackBottom:RelativeLayout;
     private lateinit var bottomBar:RelativeLayout;
     private lateinit var revIcon: ImageView;
@@ -76,11 +77,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cameraExecutor: ExecutorService;
     private lateinit var sharedPreferences: SharedPreferences
     lateinit var live:TextView
-
+lateinit var whoViewLayoutTop: RelativeLayout
+    lateinit var whoViewLayout: RelativeLayout
     var listUniqueComment= mutableListOf<String>()
     var listUniqueNick= mutableListOf<String>()
     val bitmapArray = ArrayList<Bitmap>()
     var boolList = mutableListOf<Boolean>()
+    lateinit var view:RelativeLayout
+    lateinit var whoViewAbove:RelativeLayout
     @SuppressLint("WrongViewCast", "ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,12 +105,26 @@ class MainActivity : AppCompatActivity() {
         commentsF=findViewById(R.id.comment_f)
         commentFieldHelper=findViewById(R.id.comment_field_helper)
         live=findViewById(R.id.live)
+        view=findViewById(R.id.views)
         publicateButton=findViewById(R.id.publicateButton)
-
-
+        whoViewAbove=findViewById(R.id.whoViewAbove)
+    whoViewLayoutTop=findViewById(R.id.whoviewLayoutTop)
+whoViewLayout=findViewById(R.id.whoviewLayout)
 
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         /////////////////////////////////////////////
+
+        whoViewLayout.visibility=View.GONE
+whoViewLayoutTop.setOnClickListener{
+    whoViewLayout.visibility=View.VISIBLE
+}
+        view.setOnClickListener{
+            whoViewLayout.visibility=View.VISIBLE
+        }
+whoViewAbove.setOnClickListener{
+    whoViewLayout.visibility=View.GONE
+}
+
         ///////////////////////////////////////////
         val sharedPrefLang = getSharedPreferences("lang", Context.MODE_PRIVATE)
         val savedEditTextValueLang = sharedPrefLang.getString("edit_text_value", "")
@@ -314,7 +332,9 @@ class MainActivity : AppCompatActivity() {
 
         ///////////////////
         commentsLayout = findViewById(R.id.commentsLayout)
-        commentContainer=findViewById(R.id.commentContainer)
+        viewersLayout=findViewById(R.id.comLayoutx)
+//
+//        commentContainer=findViewById(R.id.commentContainer)
         val handler = Handler(Looper.getMainLooper());
 
         handler.postDelayed(object : Runnable {
@@ -392,7 +412,7 @@ class MainActivity : AppCompatActivity() {
 
 
         var msgRus= arrayOf("Привет "+savedEditTextValue,"Ого, какая красота!", "Мне нравится ваше шоу!", "Как же я соскучился по вашим эфирам!", "Вы сегодня выглядите потрясающе!", "Смотрю вас уже несколько лет и не могу налюбоваться!", "Очень интересный контент, продолжайте в том же духе!", "Какой у вас микрофон? Очень четкий звук!", "Все ваши гости такие умные и образованные!", "Это лучшее, что я видел на протяжении всего дня!", "Я ждал этот эфир целый день!", "Вы меня очень вдохновляете!", "Так интересно слушать вас!", "Какая у вас камера? Качество картинки на высоте!", "Мне очень нравится ваше чувство юмора!", "Вы всегда поднимаете мне настроение!", "Ваш контент стал для меня настоящей находкой!", "Как вы успеваете делать все эти проекты?", "Продолжайте радовать нас своими эфирами!", "Ваше мнение для меня очень важно!", "С нетерпением жду вашего следующего эфира!", "Я смотрю вас каждый день и не могу остановиться!", "Какой у вас талант, так много знаний и умений!", "Очень хороший выбор музыки в фоне!", "Вы выглядите очень естественно и раскованно на камеру!", "Продолжайте так же, вы просто молодцы!", "Мне очень нравится, как вы подаете информацию!", "Ваши эфиры помогают мне забыть обо всем на свете!", "Как же я люблю ваши стримы!", "Вы такой мастер своего дела!", "Смотрю вас уже с первого эфира и не могу надышаться!")
-        val avatarsRus = ArrayList<Drawable>()
+
         avatarsRus.add(resources.getDrawable(R.drawable.e1))
         avatarsRus.add(resources.getDrawable(R.drawable.e2))
         avatarsRus.add(resources.getDrawable(R.drawable.e13))
@@ -695,6 +715,26 @@ if(savedEditTextValueLang==""){
             a=frontalBackCameraCounter%2;
             Log.e(TAG,""+a)
         }
+
+
+
+
+        val sourceLayout = layoutInflater.inflate(R.layout.avanickclick, null)
+        viewersLayout=sourceLayout.findViewById(R.id.comLayoutx)
+        val userName = sourceLayout.findViewById<TextView>(R.id.LiveNick)
+        userName.text=savedEditTextValue
+        val livetextShtor = sourceLayout.findViewById<TextView>(R.id.livetextshtor)
+        livetextShtor.text="Прямой эфир "+savedEditTextValue
+        val commentTextViewx = sourceLayout.findViewById<TextView>(R.id.commentTextView)
+        commentTextViewx.text=savedEditTextValue+" ·Организатор"
+        val avatarImageView = sourceLayout.findViewById<ShapeableImageView>(R.id.avatarImageView)
+        avatarImageView.setImageBitmap(bitmap)
+        val targetLayout = findViewById<RelativeLayout>(R.id.full)
+        addViewers()
+        targetLayout.removeAllViews()
+
+        targetLayout.addView(sourceLayout)
+
     }
 
     private fun requestPermission() {
@@ -850,6 +890,19 @@ if(savedEditTextValueLang==""){
     }
     data class Comment(val nickname: String, val text: String, val avatar: Drawable)
 
+
+@SuppressLint("MissingInflatedId", "SuspiciousIndentation")
+private fun addViewers(){
+
+for(i in 0 until commentsList.size) {
+
+    val comment = commentsList[i]
+    val commentView = layoutInflater.inflate(R.layout.activity_viewers, null)
+    commentView.findViewById<TextView>(R.id.commentTextView).text = comment.nickname
+    commentView.findViewById<ImageView>(R.id.avatarImageView).setImageDrawable(comment.avatar)
+    viewersLayout.addView(commentView)
+}
+}
     override fun onDestroy() {
         super.onDestroy()
 
@@ -857,6 +910,8 @@ if(savedEditTextValueLang==""){
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
+
 }
+
 
 
