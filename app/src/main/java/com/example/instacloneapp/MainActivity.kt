@@ -26,6 +26,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginTop
 import com.example.instacloneapp.databinding.ActivityMainBinding
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textview.MaterialTextView
@@ -73,6 +74,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var greyLayout:RelativeLayout
     var a =0;
     lateinit var dirx:File
+    lateinit var dir:File
     var boolean=true;
     var booleanmicro=true;
     var frontalBackCameraCounter:Int=0;
@@ -98,6 +100,8 @@ lateinit var whoViewLayoutTop: RelativeLayout
 //        setContentView(R.layout.activity_main)
         cameraExecutor = Executors.newSingleThreadExecutor()
         requestPermission()
+        dir =
+            File(cacheDir.path + "/InstagramLive")
         dirx= File(cacheDir.path+"/InstaUnique")
         username=findViewById(R.id.username)
         avatarUser=findViewById(R.id.avataruser)
@@ -398,7 +402,7 @@ Log.e(TAG,"unqiue")
 
         var nicknames = arrayOf("oliver", "charlotte", "william", "ava", "james", "sophia", "benjamin", "amelia", "lucas", "mia", "henry", "evelyn", "alexander", "harper", "michael", "abigail", "ethan", "emily", "daniel", "elizabeth", "matthew", "ella", "jackson", "mila", "david", "avery", "joseph", "sofia", "samuel", "victoria")
 
-        var messages = arrayOf("Great post!", "Thanks for sharing!", "Awesome content!", "Love this!", "Keep it up!","Hello","Hi","How are you?","Where are you?","What are you doing?","Can you help me?", "Love you","Do you know me", "Nice to meet you","What's up?","Wow, stunning picture!","Your posts are always so inspiring!","This is such a beautiful place, I need to visit it someday.","I love the creativity of your content!","That's such an interesting perspective, I never thought about it that way.","Keep up the good work!","I always look forward to your posts.","You're so talented, I'm in awe!","You have such a unique style, I love it.","Your creativity is truly inspiring.","Your positive energy is contagious.","You are such an inspiration to others.","Your authenticity is what sets you apart, keep being you!")
+        var messages = arrayOf("Hi "+savedEditTextValue, "How was your day?", "What topics would you be interested in discussing in future live broadcasts?", "How did you find your passion for blogging?", "What camera do you use for filming?", "What is your secret to success on Instagram?", "What are your plans for the near future?", "What hobbies do you have besides blogging?", "What is your favorite video format?", "What do you think about collaborating with other bloggers?", "What did you do over the weekend?", "How do you keep your channel in good shape?", "What advice can you give to beginners on Instagram?", "How do you come up with content for your channel?", "How do you find time to create content for your channel?", "Long time no see! How have you been?", "How do you deal with stress while creating content?", "What projects are you planning in the near future?", "How do you handle criticism from your viewers?", "How do you work with marketing companies?", "What sources do you use for inspiration?", "When can we expect a new video from you?", "How do you choose music for your videos?", "What is your favorite moment in blogging?", "How is your day going?", "How do you find new subscribers for your channel?", "How do you work with comments from your viewers?", "What are your interests and hobbies?", "How do you deal with creative block?", "What book are you currently reading?", "What movies have you recently watched?", "What is your mood for today?", "What is your favorite restaurant in town?", "How do you feel about working with designers and photographers?", "What are the main topics that will be covered on your channel next month?", "What advice can you give on building a personal brand?", "How do you feel about promoting your social networks through other platforms?", "How are you feeling?", "Where are you right now?", "What will be in the broadcast today?", "I love you!", "What is your favorite movie?", "What is your favorite song?", "What do you usually do in your free time?", "How do you like the new season of your favorite show?", "What are your plans for the weekend?", "Great content, keep up the good work!", "What's your favorite sport?", "I've been wanting to ask you a question for a while now", "How do you find motivation for your work?", "What do you think of my new avatar?", "I want to thank you for sharing your experience and knowledge.", "What do you think of the new makeup trend?", "Your advice is so helpful, I'm already applying it in my life!", "What are your favorite clothing brands?", "Hello!", "I saw your stories where you talked about your favorite restaurant.", "How do you like their food?", "What's your favorite restaurant in town?")
         val avatars =  ArrayList<Drawable>()
         avatars.add(resources.getDrawable(R.drawable.e1))
         avatars.add(resources.getDrawable(R.drawable.e2))
@@ -418,12 +422,30 @@ Log.e(TAG,"unqiue")
         avatars.add(resources.getDrawable(R.drawable.e24))
         avatars.add(resources.getDrawable(R.drawable.e20))
         avatars.add(resources.getDrawable(R.drawable.e21))
+        avatars.add(resources.getDrawable(R.drawable.r1))
+        avatars.add(resources.getDrawable(R.drawable.r2))
+        avatars.add(resources.getDrawable(R.drawable.r3))
+        avatars.add(resources.getDrawable(R.drawable.r14))
+        avatars.add(resources.getDrawable(R.drawable.r5))
+        avatars.add(resources.getDrawable(R.drawable.r6))
+        avatars.add(resources.getDrawable(R.drawable.r7))
+        avatars.add(resources.getDrawable(R.drawable.r13))
+        avatars.add(resources.getDrawable(R.drawable.r9))
+        avatars.add(resources.getDrawable(R.drawable.r10))
+        avatars.add(resources.getDrawable(R.drawable.r11))
+        avatars.add(resources.getDrawable(R.drawable.r12))
+        avatars.add(resources.getDrawable(R.drawable.r14))
 
 
         var nikRus= arrayOf("alenka_98", "stasik2003", "natashka_25", "maximilian_007", "misha_king", "elena_flower", "nikita_fox", "larisa_lioness", "dmitry_phoenix", "valery_sky", "nina_butterfly", "andrei_moon", "svetlana_star", "kirill_dark", "viktoriya_rainbow", "artem_tiger", "tanya_dreamer", "alexey_eagle", "anna_beauty", "ivan_iceberg", "maria_mystic", "vladimir_wolf", "olga_smile", "ruslan_fire", "eva_angel", "boris_thunder", "dasha_sunshine", "roman_dream", "anastasia_queen", "denis_silver")
 
 
-        var msgRus= arrayOf("Привет "+savedEditTextValue,"Ого, какая красота!", "Мне нравится ваше шоу!", "Как же я соскучился по вашим эфирам!", "Вы сегодня выглядите потрясающе!", "Смотрю вас уже несколько лет и не могу налюбоваться!", "Очень интересный контент, продолжайте в том же духе!", "Какой у вас микрофон? Очень четкий звук!", "Все ваши гости такие умные и образованные!", "Это лучшее, что я видел на протяжении всего дня!", "Я ждал этот эфир целый день!", "Вы меня очень вдохновляете!", "Так интересно слушать вас!", "Какая у вас камера? Качество картинки на высоте!", "Мне очень нравится ваше чувство юмора!", "Вы всегда поднимаете мне настроение!", "Ваш контент стал для меня настоящей находкой!", "Как вы успеваете делать все эти проекты?", "Продолжайте радовать нас своими эфирами!", "Ваше мнение для меня очень важно!", "С нетерпением жду вашего следующего эфира!", "Я смотрю вас каждый день и не могу остановиться!", "Какой у вас талант, так много знаний и умений!", "Очень хороший выбор музыки в фоне!", "Вы выглядите очень естественно и раскованно на камеру!", "Продолжайте так же, вы просто молодцы!", "Мне очень нравится, как вы подаете информацию!", "Ваши эфиры помогают мне забыть обо всем на свете!", "Как же я люблю ваши стримы!", "Вы такой мастер своего дела!", "Смотрю вас уже с первого эфира и не могу надышаться!")
+        var msgRus= arrayOf(
+            "Привет "+savedEditTextValue,"Как прошел твой день?", "Какие темы тебе было бы интересно обсудить в будущих прямых эфирах?", "Как ты нашел свою страсть к блогингу?", "Какая камера у тебя используется для съемок?", "Какой у тебя секрет успеха в инстаграме?", "Какие у тебя планы на ближайшее время?", "Какие хобби у тебя есть, помимо блогинга?", "Какой твой самый любимый видео формат?", "Что ты думаешь о сотрудничестве с другими блогерами?", "Что ты делал на выходных?", "Как ты поддерживаешь свой канал в хорошей форме?", "Какие советы ты можешь дать новичкам в инстаграме?", "Каким образом ты придумываешь контент для своего канала?", "Как ты находишь время для создания контента на своем канале?", "Давно не виделись! Как поживаешь?", "Как ты справляешься со стрессом во время создания контента?", "Какие проекты ты планируешь в ближайшем будущем?", "Как ты относишься к критике своих зрителей?", "Как ты работаешь с маркетинговыми компаниями?", "Какие источники ты используешь для получения вдохновения?", "Когда ждать новое видео от тебя?", "Как ты подбираешь музыку для своих видео?", "Какой твой любимый момент в блогинге?", "Как проходит день?", "Как ты находишь новых подписчиков для своего канала?","Как ты работаешь с комментариями своих зрителей?" , "Какие у тебя увлечения и хобби?", "Как ты справляешься с креативным кризисом?", "Какую книгу ты сейчас читаешь?", "Какие фильмы ты недавно посмотрел?", "Как твой настрой на сегодняшний день?", "Какой твой любимый ресторан в городе?", "Как ты относишься к работе с дизайнерами и фотографами?", "Какие главные темы будут рассмотрены на твоем канале в следующем месяце?", "Какие советы ты можешь дать по созданию личного бренда?", "Как ты относишься к продвижению своих социальных сетей через другие платформы?", "Как настроение?", "Где ты находишься сейчас?", "Что сегодня будет в эфире?", "Я тебя обожаю!", "Какой твой любимый фильм?", "Какая твоя любимая песня?", "Что ты обычно делаешь в свободное время?", "Как тебе новый сезон твоего любимого шоу?", "Какие планы на выходные?",
+             "Очень крутой контент, продолжай в том же духе!", "Какой твой любимый вид спорта?","Я давно хотела задать тебе вопрос", "как ты находишь мотивацию для твоей работы?", "Как тебе мой новый аватар?", "Хочу поблагодарить тебя за то, что делишься своим опытом и знаниями.", "Что ты думаешь о новом тренде в макияже?")
+//    val msgR= arrayOf( "Твои советы настолько полезны, я уже применяю их в своей жизни!", "Какие твои любимые бренды одежды?", "Привет!", "Я видела твои сторис, где ты рассказывал о своем любимом ресторане.", "Как тебе их блюда?", "Какой твой любимый ресторан в городе?", "Хочу спросить твое мнение на счет одного интересного проекта.","Что ты думаешь об этом?", "Ты выглядишь так стильно!", "Можешь рассказать, где ты покупаешь свою одежду?", "Какой твой любимый напиток?", "Хочу сказать, что ты делаешь отличную работу и мне очень нравится твой контент.", "Какой твой любимый вид транспорта?", "Большое спасибо за то, что ты делишься своей жизнью с нами!", "Какая твоя любимая книга?"
+//        , "Ты умеешь прекрасно говорить на камеру, у тебя есть секреты?", "Я нашелся в твоих сторис!", "Круто, что мы можем общаться таким образом.", "Какой твой любимый жанр кино?", "Хочу узнать твое мнение на тему книг.", "Какую книгу ты советуешь прочитать?", "Какой твой любимый видеоблогер?", "Ты настоящая звезда, продолжай светить!", "Как твой день проходит?", "Какой твой любимый цвет?", "Хочу спросить, как ты думаешь о последних изменениях в инстаграме?", "Твой контент всегда такой интересный и разнообразный, как ты находишь идеи для новых постов?","Что ты думаешь о новом тренде в моде?","Ты так много путешествуешь! Можешь поделиться своим опытом путешествий?", "Какой твой любимый парк?","Что ты обычно заказываешь в кафе?","Хочу сказать, что твои посты очень мотивирующие и вдохновляющие!","Какой твой любимый фрукт?","Ты кажешься такой энергичной и позитивной! Как ты находишь баланс между работой и личной жизнью?","Что тебе больше всего нравится в твоей работе?","Какой твой любимый город?","Ты выглядишь потрясающе","Какой твой любимый праздник?", "Спасибо за то, что ты делаешь, твои посты всегда очень интересны.", "Какой твой любимый сезон года?", "Как ты поддерживаешь мотивацию для тренировок?", "Какой твой любимый фильм?", "Ты вдохновляешь меня быть лучше каждый день.", "Как ты управляешь своим временем, чтобы успевать все делать?", "Какой твой секрет для поддержания здорового образа жизни?"
+//    )
 
         avatarsRus.add(resources.getDrawable(R.drawable.e1))
         avatarsRus.add(resources.getDrawable(R.drawable.e2))
@@ -443,7 +465,19 @@ Log.e(TAG,"unqiue")
         avatarsRus.add(resources.getDrawable(R.drawable.e24))
         avatarsRus.add(resources.getDrawable(R.drawable.e20))
         avatarsRus.add(resources.getDrawable(R.drawable.e21))
-
+        avatarsRus.add(resources.getDrawable(R.drawable.r1))
+        avatarsRus.add(resources.getDrawable(R.drawable.r2))
+        avatarsRus.add(resources.getDrawable(R.drawable.r3))
+        avatarsRus.add(resources.getDrawable(R.drawable.r14))
+        avatarsRus.add(resources.getDrawable(R.drawable.r5))
+        avatarsRus.add(resources.getDrawable(R.drawable.r6))
+        avatarsRus.add(resources.getDrawable(R.drawable.r7))
+        avatarsRus.add(resources.getDrawable(R.drawable.r13))
+        avatarsRus.add(resources.getDrawable(R.drawable.r9))
+        avatarsRus.add(resources.getDrawable(R.drawable.r10))
+        avatarsRus.add(resources.getDrawable(R.drawable.r11))
+        avatarsRus.add(resources.getDrawable(R.drawable.r12))
+        avatarsRus.add(resources.getDrawable(R.drawable.r14))
 
         if(savedEditTextValueLang==""){
             nikRus=nikRus+list.toTypedArray()
@@ -451,7 +485,7 @@ Log.e(TAG,"unqiue")
             msgRus=msgRus+listComment.toTypedArray()
             Log.e(TAG, msgRus.toMutableList().toString())
 
-            val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path + "/InstagramLive")
+
             val avatarDir = ArrayList<Drawable>()
 
             if (dir.exists() && dir.isDirectory) {
@@ -472,7 +506,7 @@ Log.e(TAG,"unqiue")
                 msgRus=msgRus+listComment.toTypedArray()
                 Log.e(TAG, msgRus.toMutableList().toString())
 
-                val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path + "/InstagramLive")
+
                 val avatarDir = ArrayList<Drawable>()
 
                 if (dir.exists() && dir.isDirectory) {
@@ -493,7 +527,7 @@ Log.e(TAG,"unqiue")
                 messages=messages+listComment.toTypedArray()
                 Log.e(TAG, messages.toMutableList().toString())
 
-                val dir = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path + "/InstagramLive")
+
                 val avatarDir = ArrayList<Drawable>()
 
                 if (dir.exists() && dir.isDirectory) {
@@ -514,63 +548,155 @@ Log.e(TAG,"unqiue")
 
 
 
-        val usedMessages = mutableListOf<String>()
+        var messages2= arrayOf<String>()
+        var messages3= arrayOf<String>()
+        while (messages3.size<151){
+            for (i in 0 until messages.size) {
+                val randomelement = messages.random()
+                messages2 = messages2.plus(randomelement)
+                messages = messages.filterNot { it == randomelement }.toTypedArray()
+                Log.e(TAG, messages2.size.toString())
 
-        fun getRandomMessage(): String {
-            if (usedMessages.size == messages.size) {
-                usedMessages.clear() // reset used messages if all have been used
+                Log.e(TAG, randomelement)
             }
-            var message = messages.random()
-            while (usedMessages.contains(message)) {
-                message = messages.random()
+            Log.e(TAG, messages.size.toString())
+            messages = messages.plus(messages2)
+            messages3=messages3.plus(messages2)
+            messages2= emptyArray()
+
+        }
+        Log.e(TAG, messages3.size.toString())
+        Log.e(TAG, messages3.count { it == "Мне очень нравится, как вы подаете информацию!" }.toString())
+
+
+        var nicknames2= arrayOf<String>()
+        var nicknames3= arrayOf<String>()
+        while (nicknames3.size<151) {
+            for (i in 0 until nicknames.size) {
+                val randomelement = nicknames.random()
+                nicknames2 = nicknames2.plus(randomelement)
+                nicknames = nicknames.filterNot { it == randomelement }.toTypedArray()
+                Log.e(TAG, nicknames2.size.toString())
+
+                Log.e(TAG, randomelement)
             }
-            usedMessages.add(message)
-//            Log.e(TAG,message)
-            return message
+            Log.e(TAG, nicknames.size.toString())
+            nicknames = nicknames.plus(nicknames2)
+            nicknames3=nicknames3.plus(nicknames2)
+            nicknames2= emptyArray()
+
+        }
+        Log.e(TAG, nicknames3.size.toString())
+        Log.e(TAG, nicknames3.count { it == "natashka_25" }.toString())
+
+
+        val avatars2 = ArrayList<Drawable>()
+
+        val avatars3 = ArrayList<Drawable>()
+        while (avatars3.size<151) {
+            for (i in 0 until avatars.size) {
+                val randomelement = avatars.random()
+                avatars2.add(randomelement)
+                avatars.remove(randomelement)
+            }
+            Log.e(TAG, avatars.size.toString())
+            avatars.addAll(avatars2)
+            avatars3.addAll(avatars2)
+            avatars.clear()
+            Log.e(TAG, avatars3.size.toString())
 
         }
 
-        val usedMessagesRus = mutableListOf<String>()
 
-        fun getRandomMessageRus(): String {
-            if (usedMessagesRus.size == msgRus.size) {
-                usedMessagesRus.clear() // reset used messages if all have been used
+
+
+
+        var msgRus2= arrayOf<String>()
+        var msgRus3= arrayOf<String>()
+        Log.e(TAG,"aaaaa1111aaaa"+msgRus.size.toString())
+        while (msgRus3.size<151){
+            for (i in 0 until msgRus.size) {
+                val randomelement = msgRus.random()
+                msgRus2 = msgRus2.plus(randomelement)
+                msgRus = msgRus.filterNot { it == randomelement }.toTypedArray()
+                Log.e(TAG, msgRus2.size.toString())
+
+                Log.e(TAG, randomelement)
             }
-            var message = msgRus.random()
-            while (usedMessages.contains(message)) {
-                message = msgRus.random()
+            Log.e(TAG, msgRus.size.toString())
+            msgRus = msgRus.plus(msgRus2)
+            msgRus3=msgRus3.plus(msgRus2)
+            msgRus2= emptyArray()
+
+        }
+        Log.e(TAG, msgRus3.size.toString())
+        Log.e(TAG, msgRus3.count { it == "Мне очень нравится, как вы подаете информацию!" }.toString())
+
+
+        var nikRus2= arrayOf<String>()
+        var nikRus3= arrayOf<String>()
+        while (nikRus3.size<151) {
+            for (i in 0 until nikRus.size) {
+                val randomelement = nikRus.random()
+                nikRus2 = nikRus2.plus(randomelement)
+                nikRus = nikRus.filterNot { it == randomelement }.toTypedArray()
+                Log.e(TAG, nikRus2.size.toString())
+
+                Log.e(TAG, randomelement)
             }
-            usedMessagesRus.add(message)
-//            Log.e(TAG,message)
-            return message
+            Log.e(TAG, nikRus.size.toString())
+            nikRus = nikRus.plus(nikRus2)
+            nikRus3=nikRus3.plus(nikRus2)
+            nikRus2= emptyArray()
+
+        }
+        Log.e(TAG, nikRus3.size.toString())
+        Log.e(TAG, nikRus3.count { it == "natashka_25" }.toString())
+
+
+        val avatarsRus2 = ArrayList<Drawable>()
+
+        val avatarsRus3 = ArrayList<Drawable>()
+        while (avatarsRus3.size<151) {
+            for (i in 0 until avatarsRus.size) {
+                val randomelement = avatarsRus.random()
+                avatarsRus2.add(randomelement)
+                avatarsRus.remove(randomelement)
+            }
+            Log.e(TAG, avatarsRus.size.toString())
+            avatarsRus.addAll(avatarsRus2)
+            avatarsRus3.addAll(avatarsRus2)
+            avatarsRus2.clear()
+            Log.e(TAG, avatarsRus3.size.toString())
 
         }
 if(savedEditTextValueLang==""){
-    for (i in 1..30) { // Generate 10 comments
+    for (i in 1..150) { // Generate 30 comments
 
-        val nickname = nikRus.random()
-        val message = getRandomMessageRus()
-        val avatar = avatarsRus.random()
+        val nickname = nikRus3[i]
+        val message = msgRus3[i]
+        val avatar = avatarsRus3[i]
         commentsList.add(Comment(nickname, message, avatar))
     }
     }else {
     if (savedEditTextValueLang == "EN") {
 
-        for (i in 1..30) { // Generate 10 comments
+        for (i in 1..150) { // Generate 10 comments
 
-            val nickname = nicknames.random()
-            val message = getRandomMessage()
-            val avatar = avatars.random()
+            val nickname = nicknames3[i]
+            val message = messages3[i]
+            val avatar = avatars3[i]
             commentsList.add(Comment(nickname, message, avatar))
 
 
         }
     } else {
-        for (i in 1..30) { // Generate 10 comments
+        for (i in 1..150) { // Generate 10 comments
 
-            val nickname = nikRus.random()
-            val message = getRandomMessageRus()
-            val avatar = avatarsRus.random()
+
+            val nickname = nikRus3[i]
+            val message = msgRus3[i]
+            val avatar = avatarsRus3[i]
             commentsList.add(Comment(nickname, message, avatar))
 
 
@@ -832,9 +958,15 @@ if(savedEditTextValueLang==""){
         }, 100)
 
     }
+
+
     private fun addRandomComment() {
-        val randomIndex = random.nextInt(commentsList.size)
-        val comment = commentsList[randomIndex]
+if(a>150){
+    a=0
+}
+      Log.e(TAG,a.toString())
+           var comment = commentsList[a]
+        a++
 
         val commentView = layoutInflater.inflate(R.layout.activity_comment, null)
         commentView.findViewById<TextView>(R.id.nickTextView).text = comment.nickname
@@ -856,9 +988,15 @@ if(savedEditTextValueLang==""){
     }
     @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("MissingInflatedId")
+    var b:Int=80
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun addRandomCommentJoined() {
-        val randomIndex = random.nextInt(commentsList.size)
-        val comment = commentsList[randomIndex]
+        if(b<1){
+            b=80
+        }
+        Log.e(TAG,b.toString())
+        var comment = commentsList[b]
+        b--
         val sharedPrefLang = getSharedPreferences("lang", Context.MODE_PRIVATE)
         val savedEditTextValueLang = sharedPrefLang.getString("edit_text_value", "")
 
@@ -866,6 +1004,7 @@ if(savedEditTextValueLang==""){
         val commentView = layoutInflater.inflate(R.layout.activity_comment, null)
         commentView.findViewById<TextView>(R.id.nickTextView).text = comment.nickname
         if(savedEditTextValueLang==""){
+
         commentView.findViewById<TextView>(R.id.commentTextView).text = "Присоединился(-ась)"}
         else{
             if(savedEditTextValueLang=="РУ"){
