@@ -4,94 +4,114 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:id="@+id/commentLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="16dp">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/avatarImage"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:shapeAppearanceOverlay="@style/circular"
-            android:scaleType="centerCrop"
-            android:layout_marginVertical="30dp"
-            android:src="@drawable/no_user" />
-
-
-        <LinearLayout
-            android:layout_width="152dp"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:layout_marginStart="16dp"
-            android:orientation="vertical">
 <RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/nicknameText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Nickname"
-                android:textSize="11sp"
-                android:textStyle="bold" />
+    android:id="@+id/uniqueTop"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/live">
 
-    <CheckBox
-        android:id="@+id/verificationCheck"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="5dp"
-
-        android:layout_toEndOf="@id/nicknameText" />
-
-</RelativeLayout>
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            <EditText
-                android:id="@+id/commentText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="Comment"
-                android:textSize="11sp" />
-
-
-            </RelativeLayout>
-        </LinearLayout>
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginStart="15dp"
-    android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/saveUnique"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Сохранить"
-            android:backgroundTint="@color/live"
-            android:textSize="8dp" />
-    <Button
-        android:id="@+id/cancelUnique"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:text="Отменить"
-        android:backgroundTint="@color/live"
-        android:textSize="8dp" />
-    <Button
-        android:id="@+id/addContinue"
+    <TextView
+        android:id="@+id/topUniq"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="+"
-        android:textAlignment="center"
+        android:text="Unique Comment"
         android:textColor="@color/white"
+        android:textSize="20dp" />
+
+    <Button
+        android:id="@+id/cancelUnique"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/circle"
+        android:layout_alignParentEnd="true"
+        android:backgroundTint="@color/white"
+        android:text="x"
         android:textSize="15dp" />
 
-</LinearLayout>
-    </LinearLayout>
+
+</RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/uniqueTop"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="15dp"
+        >
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/avatarImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginVertical="30dp"
+            android:layout_marginTop="3dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/no_user"
+            app:shapeAppearanceOverlay="@style/circular" />
+
+        <EditText
+            android:id="@+id/nicknameText"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_alignTop="@+id/avatarImage"
+            android:layout_marginStart="30dp"
+
+            android:layout_toEndOf="@+id/avatarImage"
+            android:hint="Nickname"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <CheckBox
+            android:id="@+id/verificationCheck"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignTop="@+id/nicknameText"
+            android:layout_alignBottom="@+id/nicknameText"
+            android:layout_marginStart="5dp"
+
+            android:layout_toEndOf="@id/nicknameText" />
+
+
+        <EditText
+            android:id="@+id/commentText"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/nicknameText"
+            android:layout_alignBottom="@+id/avatarImage"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/avatarImage"
+            android:hint="Comment"
+            android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/saveUnique"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_below="@+id/avatarImage"
+            android:layout_alignEnd="@+id/verificationCheck"
+
+            android:layout_marginTop="0dp"
+
+            android:backgroundTint="@color/live"
+            android:text="Сохранить"
+            android:textSize="8dp" />
+
+
+        <Button
+            android:id="@+id/addContinue"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_below="@+id/avatarImage"
+            android:layout_alignStart="@+id/avatarImage"
+
+
+            android:text="+"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

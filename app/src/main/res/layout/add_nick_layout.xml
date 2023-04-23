@@ -4,57 +4,87 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:id="@+id/uniqueTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/live">
+
+        <TextView
+            android:id="@+id/topNameDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Add Nickname"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/dialogCancelBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/circle"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/white"
+            android:text="x"
+            android:textSize="15dp" />
+
+
+    </RelativeLayout>
+
 
     <EditText
         android:id="@+id/dialogtxtNick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:layout_below="@+id/uniqueTop"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="15dp"
         android:hint="riksuz"
-        android:layout_marginHorizontal="90dp"
-        android:textAlignment="center"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        />
+        android:textAlignment="center" />
 
-    <LinearLayout
-        android:id="@+id/savecancel"
+
+    <Button
+        android:id="@+id/dialogSaveBtn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_below="@+id/dialogtxtNick"
-        android:layout_centerInParent="true"
-        android:paddingHorizontal="20dp">
 
-        <Button
-            android:id="@+id/dialogSaveBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+        android:layout_alignEnd="@+id/dialogtxtNick"
 
-            android:text="Сохранить"
-            android:textSize="10dp" />
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="-2dp"
+        android:text="Сохранить"
+        android:textSize="10dp" />
 
-        <Button
-            android:id="@+id/dialogCancelBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="30dp"
-            android:text="Отменить"
-            android:textSize="10dp" />
+    <Button
+        android:id="@+id/addFile"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_below="@+id/dialogtxtNick"
 
-    </LinearLayout>
-    <LinearLayout
+        android:layout_alignStart="@+id/dialogtxtNick"
+
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="15dp"
+        android:text="Выбрать файл"
+        android:textSize="10dp" />
+
+    <TextView
+        android:id="@+id/selfileinfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/savecancel"
-        android:layout_centerInParent="true"
-        android:paddingHorizontal="20dp">
+        android:layout_below="@+id/addFile"
 
-        <Button
-            android:id="@+id/addFile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Выбрать файл"
-            android:textSize="10dp" />
-    </LinearLayout>
+        android:layout_alignStart="@+id/dialogtxtNick"
+
+        android:layout_alignEnd="@+id/dialogSaveBtn"
+        android:paddingTop="10dp"
+        android:text="При нажатии на выбрать файл вы можете сразу добавить несколько никнеймов.
+Для этого выберите .txt файл, где никнеймы перечисляются с запятыми."
+        android:textAlignment="center"
+        android:textColor="@color/grey"
+        android:textSize="14dp" />
+
 </RelativeLayout>

@@ -11,7 +11,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.*
+import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
@@ -30,6 +32,7 @@ import com.google.android.material.textview.MaterialTextView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.io.File
+import java.io.IOException
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -69,6 +72,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var imgForComment:ImageView;
     lateinit var greyLayout:RelativeLayout
     var a =0;
+    lateinit var dirx:File
     var boolean=true;
     var booleanmicro=true;
     var frontalBackCameraCounter:Int=0;
@@ -94,6 +98,7 @@ lateinit var whoViewLayoutTop: RelativeLayout
 //        setContentView(R.layout.activity_main)
         cameraExecutor = Executors.newSingleThreadExecutor()
         requestPermission()
+        dirx= File(cacheDir.path+"/InstaUnique")
         username=findViewById(R.id.username)
         avatarUser=findViewById(R.id.avataruser)
         avatarCenter=findViewById(R.id.avataruserCenter)
@@ -155,16 +160,22 @@ whoViewAbove.setOnClickListener{
         Log.e(TAG,bitmapArray.toString())
 
 
-        val sharedPrefsB = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
-        val count = sharedPrefsB.getInt("bitmapCount", 0)
         val bitmapArrayB = ArrayList<Bitmap>()
-        for (i in 0 until count) {
-            val path = sharedPrefsB.getString("bitmap_$i", null)
-            if (path != null) {
-                val file = File(path)
-                if (file.exists()) {
-                    val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+        val fileListx = dirx.listFiles()
+        val uriListx = ArrayList<Uri>()
+
+        if (fileListx != null) {
+            for (file in fileListx) {
+                val uri = Uri.fromFile(file)
+                uriListx.add(uri)
+            }
+
+            for (uri in uriListx) {
+                try {
+                    val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
                     bitmapArrayB.add(bitmap)
+                } catch (e: IOException) {
+                    e.printStackTrace()
                 }
             }
         }
@@ -366,7 +377,8 @@ whoViewAbove.setOnClickListener{
      handlerUnique.postDelayed(object : Runnable {
          var index:Int=0
          override fun run() {
-
+Log.e(TAG,"unqiue")
+             Log.e(TAG,bitmapArray.size.toString())
              if(index<bitmapArray.size) {
                  addUniqueComment(index)
                  index++

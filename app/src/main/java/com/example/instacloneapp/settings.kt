@@ -119,7 +119,7 @@ class settings : AppCompatActivity() {
             addCommentButton.text="Добавить"
             toggleButton.text="Начать"
             creator.text="Разработчик: Riksuz"
-            ideaCreator.text="Автор идеи: Overbafer1"
+            ideaCreator.text="Автор идеи: overbafer1"
         }else {
             if (savedEditTextValueLang == "РУ") {
                 topBarTxt.text="Настройки"
@@ -134,7 +134,7 @@ class settings : AppCompatActivity() {
                 addCommentButton.text="Добавить"
                 toggleButton.text="Начать"
                 creator.text="Разработчик: Riksuz"
-                ideaCreator.text="Автор идеи: Overbafer1"
+                ideaCreator.text="Автор идеи: overbafer1"
             } else {
                 topBarTxt.text="Settings"
                 selLang.text="Language: "
@@ -148,7 +148,7 @@ class settings : AppCompatActivity() {
                 addCommentButton.text="Add"
                 toggleButton.text="Start"
                 creator.text="App developer: Riksuz"
-                ideaCreator.text="Author of Idea: Overbafer1"
+                ideaCreator.text="Author of Idea: overbafer1"
             }
         }
 
@@ -223,7 +223,7 @@ Log.e(TAG,isChecked.toString())
 
 
         addCommentButton.setOnClickListener{
-            val intent = Intent(this, AddComment::class.java)
+            val intent = Intent(this, FragmentsLayoutAddOption::class.java)
             startActivity(intent)
 
         }
@@ -329,7 +329,7 @@ Log.e(TAG,isChecked.toString())
                 addCommentButton.text="Add"
                 toggleButton.text="Start"
                 creator.text="App developer: Riksuz"
-                ideaCreator.text="Author of Idea: Overbafer1"
+                ideaCreator.text="Author of Idea: overbafer1"
 
             }else{
                 lang.text="РУ"
@@ -345,7 +345,7 @@ Log.e(TAG,isChecked.toString())
                 addCommentButton.text="Добавить"
                 toggleButton.text="Начать"
                 creator.text="Разработчик: Riksuz"
-                ideaCreator.text="Автор идеи: Overbafer1"
+                ideaCreator.text="Автор идеи: overbafer1"
             }
 
             val sharedPref = getSharedPreferences("lang", Context.MODE_PRIVATE)

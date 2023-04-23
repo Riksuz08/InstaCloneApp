@@ -206,22 +206,6 @@ dirx=File(cacheDir.path+"/InstaUnique")
 
 
 
-
-//
-//        val sharedPrefsB = getSharedPreferences("bitmapList", Context.MODE_PRIVATE)
-//        val count = sharedPrefsB.getInt("bitmapCount", 0)
-//        val bitmapArrayB = ArrayList<Bitmap>()
-//        for (i in 0 until count) {
-//            val path = sharedPrefsB.getString("bitmap_$i", null)
-//            if (path != null) {
-//                val file = File(path)
-//                if (file.exists()) {
-//                    val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-//                    bitmapArrayB.add(bitmap)
-//                    Log.e(TAG, bitmapArrayB.toString())
-//                }
-//            }
-//        }
         val bitmapArrayB = ArrayList<Bitmap>()
         val fileListx = dirx.listFiles()
         val uriListx = ArrayList<Uri>()
@@ -888,6 +872,7 @@ dirx=File(cacheDir.path+"/InstaUnique")
 
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "image/*"
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1)
         }
 
