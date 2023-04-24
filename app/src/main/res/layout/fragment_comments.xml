@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CommentsFragment">
+
+
+    <RelativeLayout
+        android:id="@+id/addCommentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        >
+
+        <TextView
+            android:id="@+id/addCommentTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="12dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/black"
+            android:layout_marginEnd="52dp"
+            android:layout_toStartOf="@+id/addCommentButton"
+            android:text="Добавить/Удалить сообщение"
+            android:textSize="15dp" />
+
+        <Button
+            android:id="@+id/addCommentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/deleteCommentButton"
+            android:backgroundTint="@color/live"
+            android:maxLines="1"
+            android:layout_centerVertical="true"
+            android:text="Добавить"
+            android:textSize="8dp" />
+
+        <Button
+            android:id="@+id/deleteCommentButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="21dp"
+            android:layout_centerVertical="true"
+            android:backgroundTint="@color/live"
+            android:maxLines="1"
+            android:text="Удалить"
+            android:textSize="8dp" />
+
+
+    </RelativeLayout>
+    <androidx.core.widget.NestedScrollView
+        android:padding="5dp"
+        android:id="@+id/commentScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="15dp"
+        android:layout_marginHorizontal="5dp"
+        android:background="@drawable/sawradius"
+
+        android:layout_below="@+id/addCommentLayout"
+        >
+
+        <TextView
+            android:hint="1.Hello"
+            android:id="@+id/commentTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:layout_marginHorizontal="20dp"
+            android:text=""
+            />
+
+
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</RelativeLayout>

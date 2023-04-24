@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UniqueComments">
+
+
+    <RelativeLayout
+        android:id="@+id/uniqueLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        >
+
+        <TextView
+            android:id="@+id/uniqueAvatarTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="12dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginEnd="52dp"
+            android:layout_toStartOf="@+id/adduniqueAvatarButton"
+            android:text="Добавить/Удалить уникальный комментарий"
+            android:textColor="@color/black"
+            android:textSize="15dp" />
+
+        <Switch
+            android:id="@+id/switchUniqueComments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="-45dp"
+            android:layout_toEndOf="@+id/uniqueAvatarTxt"
+            android:checked="false">
+
+        </Switch>
+
+        <Button
+            android:id="@+id/adduniqueAvatarButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/deleteUniqueAvatarButton"
+            android:backgroundTint="@color/live"
+            android:maxLines="1"
+            android:layout_centerVertical="true"
+            android:text="Добавить"
+            android:textSize="8dp" />
+
+        <Button
+            android:id="@+id/deleteUniqueAvatarButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="21dp"
+            android:layout_centerVertical="true"
+            android:backgroundTint="@color/live"
+            android:maxLines="1"
+            android:text="Удалить"
+            android:textSize="8dp" />
+
+
+    </RelativeLayout>
+    <androidx.core.widget.NestedScrollView
+        android:padding="10dp"
+        android:id="@+id/UniqueCommentScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="5dp"
+        android:background="@drawable/sawradius"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@+id/uniqueLayout"
+        >
+        <LinearLayout
+            android:id="@+id/commentLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+
+
+    </RelativeLayout>
+

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/uniqueTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/live">
+
+        <TextView
+            android:id="@+id/topNameDialogDel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Add Nickname"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+
+        <Button
+            android:id="@+id/dialogCancelBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/circle"
+            android:layout_alignParentEnd="true"
+            android:backgroundTint="@color/white"
+            android:text="x"
+            android:textSize="15dp" />
+
+
+    </RelativeLayout>
+
+
+    <EditText
+        android:id="@+id/dialogtxtNick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:layout_below="@+id/uniqueTop"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="15dp"
+        android:hint="riksuz"
+        android:textAlignment="center" />
+
+
+    <Button
+        android:id="@+id/dialogSaveBtn"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/dialogtxtNick"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="Сохранить"
+        android:textSize="10dp" />
+
+</RelativeLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/usernamefrag"
+        android:icon="@drawable/user"
+        android:title="Usernames"
+        />
+    <item
+        android:id="@+id/commentsfrag"
+        android:icon="@drawable/comments"
+        android:title="Comments" />
+    <item
+        android:id="@+id/avatarsfrag"
+        android:icon="@drawable/avatars"
+        android:title="Avatars" />
+    <item
+        android:id="@+id/uniquefrag"
+        android:icon="@drawable/unique"
+        android:title="Unique" />
+</menu>
