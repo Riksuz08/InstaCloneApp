@@ -279,9 +279,21 @@ Log.e(TAG,isChecked.toString())
 
             if (editTextValue.isNotEmpty() ) {
                 if (!editTextValue.matches("-?\\d+(\\.\\d+)?".toRegex())) {
-                    Toast.makeText(this, "Заполняйте только числами!", Toast.LENGTH_SHORT).show()
+                    if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
+                        Toast.makeText(this, "Заполните только числами!", Toast.LENGTH_SHORT)
+                            .show()
+                    }else{
+                        Toast.makeText(this, "Fill in only with numbers!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }else if(editTextValue.toInt()<1) {
+
+                    if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
                     Toast.makeText(this, "Напишите число побольше!", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(this, "Write a bigger number!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }else
                 {
             val sharedPref = getSharedPreferences("sms_count", Context.MODE_PRIVATE)
@@ -292,10 +304,20 @@ Log.e(TAG,isChecked.toString())
             // Скрываем клавиатуру
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(saveSubs.windowToken, 0)
+                    if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
                     Toast.makeText(this, "Сохранено!", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
         }
         }else{
+                if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
             Toast.makeText(this, "Пустое поле!", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(this, "Empty field!", Toast.LENGTH_SHORT)
+                        .show()
+                }
         }
     }
         // Получаем сохраненное значение из SharedPreferences
@@ -311,9 +333,20 @@ Log.e(TAG,isChecked.toString())
             val editTextValue = editTextNumSubs.text.toString();
             if (editTextValue.isNotEmpty() ) {
                 if (!editTextValue.matches("-?\\d+(\\.\\d+)?".toRegex())) {
-                    Toast.makeText(this, "Заполняйте только числами!", Toast.LENGTH_SHORT).show()
+                    if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
+                        Toast.makeText(this, "Заполните только числами!", Toast.LENGTH_SHORT)
+                            .show()
+                    }else{
+                        Toast.makeText(this, "Fill in only with numbers!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }else if(editTextValue.toInt()<1) {
-                    Toast.makeText(this, "Напишите число побольше!", Toast.LENGTH_SHORT).show()
+                    if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
+                        Toast.makeText(this, "Напишите число побольше!", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(this, "Write a bigger number!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }else
                  {
 
@@ -325,10 +358,20 @@ Log.e(TAG,isChecked.toString())
                 // Скрываем клавиатуру
                 val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(saveSubs.windowToken, 0)
-                     Toast.makeText(this, "Сохранено!", Toast.LENGTH_SHORT).show()
+                     if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
+                         Toast.makeText(this, "Сохранено!", Toast.LENGTH_SHORT).show()
+                     }else{
+                         Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT)
+                             .show()
+                     }
             }
         }else{
-                Toast.makeText(this, "Пустое поле!", Toast.LENGTH_SHORT).show()
+                if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
+                    Toast.makeText(this, "Пустое поле!", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(this, "Empty field!", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
         // Получаем сохраненное значение из SharedPreferences

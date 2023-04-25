@@ -187,17 +187,20 @@ lateinit var avatarField:EditText
 
 
                     if (!text.matches("-?\\d+(\\.\\d+)?".toRegex())) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Заполняйте только числами!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
+                            Toast.makeText(requireContext(), "Заполните только числами!", Toast.LENGTH_SHORT)
+                                .show()
+                        }else{
+                            Toast.makeText(requireContext(), "Fill in only with numbers!", Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     } else if (text.toInt() < 1 || text.toInt() >folder.list().size) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Нету такого элемента!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
+                            Toast.makeText(requireContext(), "Нету такого элемента!", Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(requireContext(), "There is no such element!", Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     } else {
                     val fileName = text + ".jpg"
                     Log.e(ContentValues.TAG, fileName)
@@ -264,8 +267,12 @@ lateinit var avatarField:EditText
 
                 }
                 }else{
-                    Toast.makeText(requireContext(), "Пустое поле", Toast.LENGTH_SHORT).show()
-
+                    if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
+                        Toast.makeText(requireContext(), "Пустое поле!", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(requireContext(), "Empty field!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
 
 

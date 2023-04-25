@@ -381,9 +381,14 @@ class UniqueComments : Fragment() {
                     }
 
 
-                } else {
-                    Toast.makeText(requireContext(), "Заполните все поля и загружайте аватарку", Toast.LENGTH_LONG)
+                }
+                else {
+                    if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
+                    Toast.makeText(requireContext(), "Заполните все поля и загружайте аватарку!", Toast.LENGTH_LONG)
                         .show()
+                    }else{
+                        Toast.makeText(requireContext(), "Fill in all fields and upload your avatar!", Toast.LENGTH_LONG).show()
+                    }
                 }
 
                 commentField.text = null
@@ -428,13 +433,35 @@ class UniqueComments : Fragment() {
 
 
             saveButton.setOnClickListener {
+
+
+
+
                 Log.e(ContentValues.TAG, commentField.text.toString().isNotEmpty().toString())
                 Log.e(ContentValues.TAG, nickField.text.toString().isNotEmpty().toString())
                 Log.e(ContentValues.TAG, (UniqueAvatarImage != null).toString())
 
+                drw = UniqueAvatarImage.drawable
+// Compare the drawable resource to a specific drawable resource using its resource ID
+                hasnoUserIcon =
+                    !drw.getConstantState()!!
+                        .equals(getResources().getDrawable(R.drawable.no_user).getConstantState())
+                Log.e(ContentValues.TAG, hasnoUserIcon.toString())
+                if (commentField.text.toString().isNotEmpty() && nickField.text.toString()
+                        .isNotEmpty() && hasnoUserIcon
+                ) {
+                    coment()
+                    dialogU.dismiss()
 
-                coment()
-                dialogU.dismiss()
+                }
+                else {
+                if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
+                    Toast.makeText(requireContext(), "Заполните все поля и загружайте аватарку!", Toast.LENGTH_LONG)
+                        .show()
+                }else{
+                    Toast.makeText(requireContext(), "Fill in all fields and upload your avatar!", Toast.LENGTH_LONG).show()
+                }
+            }
             }
 
 
@@ -489,17 +516,20 @@ class UniqueComments : Fragment() {
                 var text = nickField.text.toString()
                 if (text.isNotEmpty()) {
                     if (!text.matches("-?\\d+(\\.\\d+)?".toRegex())) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Заполняйте только числами!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
+                            Toast.makeText(requireContext(), "Заполните только числами!", Toast.LENGTH_SHORT)
+                                .show()
+                        }else{
+                            Toast.makeText(requireContext(), "Fill in only with numbers!", Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     } else if (text.toInt() < 1 || text.toInt() >listUniqueNick.size) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Нету такого элемента!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
+                            Toast.makeText(requireContext(), "Нету такого элемента!", Toast.LENGTH_SHORT).show()
+                        }else{
+                            Toast.makeText(requireContext(), "There is no such element!", Toast.LENGTH_SHORT)
+                                .show()
+                        }
                     } else {
                     listUniqueComment.removeAt(text.toInt() - 1)
                     listUniqueNick.removeAt(text.toInt() - 1)
@@ -625,8 +655,12 @@ class UniqueComments : Fragment() {
 
 
                 }else{
-                    Toast.makeText(requireContext(), "Пустое поле", Toast.LENGTH_SHORT).show()
-
+                    if(savedEditTextValueLang=="" || savedEditTextValueLang=="РУ") {
+                        Toast.makeText(requireContext(), "Пустое поле!", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(requireContext(), "Empty field!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
             }
 
