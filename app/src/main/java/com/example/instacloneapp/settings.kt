@@ -276,6 +276,14 @@ Log.e(TAG,isChecked.toString())
         saveNsms.setOnClickListener {
             val editTextValue = n_sms.text.toString();
             // Сохраняем текст в SharedPreferences
+
+            if (editTextValue.isNotEmpty() ) {
+                if (!editTextValue.matches("-?\\d+(\\.\\d+)?".toRegex())) {
+                    Toast.makeText(this, "Заполняйте только числами!", Toast.LENGTH_SHORT).show()
+                }else if(editTextValue.toInt()<1) {
+                    Toast.makeText(this, "Напишите число побольше!", Toast.LENGTH_SHORT).show()
+                }else
+                {
             val sharedPref = getSharedPreferences("sms_count", Context.MODE_PRIVATE)
             with(sharedPref.edit()) {
                 putString("edit_text_value", editTextValue)
@@ -284,7 +292,12 @@ Log.e(TAG,isChecked.toString())
             // Скрываем клавиатуру
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(saveSubs.windowToken, 0)
+                    Toast.makeText(this, "Сохранено!", Toast.LENGTH_SHORT).show()
         }
+        }else{
+            Toast.makeText(this, "Пустое поле!", Toast.LENGTH_SHORT).show()
+        }
+    }
         // Получаем сохраненное значение из SharedPreferences
         val smsCountShPref = getSharedPreferences("sms_count", Context.MODE_PRIVATE)
         val smsSavedValue = smsCountShPref.getString("edit_text_value", "")
@@ -294,16 +307,29 @@ Log.e(TAG,isChecked.toString())
 
 
         saveSubs.setOnClickListener {
+
             val editTextValue = editTextNumSubs.text.toString();
-            // Сохраняем текст в SharedPreferences
-            val sharedPref = getSharedPreferences("subs_number", Context.MODE_PRIVATE)
-            with(sharedPref.edit()) {
-                putString("edit_text_value", editTextValue)
-                apply()
+            if (editTextValue.isNotEmpty() ) {
+                if (!editTextValue.matches("-?\\d+(\\.\\d+)?".toRegex())) {
+                    Toast.makeText(this, "Заполняйте только числами!", Toast.LENGTH_SHORT).show()
+                }else if(editTextValue.toInt()<1) {
+                    Toast.makeText(this, "Напишите число побольше!", Toast.LENGTH_SHORT).show()
+                }else
+                 {
+
+                val sharedPref = getSharedPreferences("subs_number", Context.MODE_PRIVATE)
+                with(sharedPref.edit()) {
+                    putString("edit_text_value", editTextValue)
+                    apply()
+                }
+                // Скрываем клавиатуру
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(saveSubs.windowToken, 0)
+                     Toast.makeText(this, "Сохранено!", Toast.LENGTH_SHORT).show()
             }
-            // Скрываем клавиатуру
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(saveSubs.windowToken, 0)
+        }else{
+                Toast.makeText(this, "Пустое поле!", Toast.LENGTH_SHORT).show()
+            }
         }
         // Получаем сохраненное значение из SharedPreferences
         val sharedPref = getSharedPreferences("subs_number", Context.MODE_PRIVATE)

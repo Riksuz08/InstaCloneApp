@@ -161,10 +161,12 @@ class UsernameFragment : Fragment() {
                     editor.putString("nick", jsonString)
                     editor.apply()
 
-
+                    dialog.dismiss()
+                }else{
+                    Toast.makeText(requireContext(), "Заполните поле!", Toast.LENGTH_SHORT).show()
                 }
 
-                dialog.dismiss()
+
 
             }
 
@@ -218,7 +220,7 @@ class UsernameFragment : Fragment() {
                     if (!text.matches("-?\\d+(\\.\\d+)?".toRegex())) {
                         Toast.makeText(requireContext(), "Заполняйте только числами!", Toast.LENGTH_SHORT).show()
                     }else if(text.toInt()<1 || text.toInt()>list.size){
-                        Toast.makeText(requireContext(), "Нету такого элемента!", Toast.LENGTH_SHORT).show()
+
                     }else {
                         list.removeAt(text.toInt() - 1)
 
@@ -243,7 +245,7 @@ class UsernameFragment : Fragment() {
                     }
 
                 } else{
-                    Toast.makeText(requireContext(), "Пустое поле", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Пустое поле!", Toast.LENGTH_SHORT).show()
 
                 }
                 Log.e(TAG, list.toString())

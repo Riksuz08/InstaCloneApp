@@ -23,7 +23,7 @@
             android:layout_marginEnd="52dp"
             android:layout_toStartOf="@+id/adduniqueAvatarButton"
             android:text="Добавить/Удалить уникальный комментарий"
-            android:textColor="@color/black"
+
             android:textSize="15dp" />
 
         <Switch

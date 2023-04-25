@@ -157,10 +157,12 @@ class CommentsFragment : Fragment() {
                     editor.putString("comment", jsonString)
                     editor.apply()
 
-
+                    dialog.dismiss()
+                }else{
+                    Toast.makeText(requireContext(), "Заполните поле!", Toast.LENGTH_SHORT).show()
                 }
 
-                dialog.dismiss()
+
 
             }
 

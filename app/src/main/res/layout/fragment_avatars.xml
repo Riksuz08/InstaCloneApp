@@ -22,7 +22,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginEnd="52dp"
-            android:textColor="@color/black"
+
             android:layout_toStartOf="@+id/addAvatarButton"
             android:text="Добавить/Удалить аватарку"
             android:textSize="15dp" />
